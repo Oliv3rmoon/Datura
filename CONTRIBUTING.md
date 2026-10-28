@@ -17,7 +17,8 @@ Before opening a change:
 
 Every comment-capable code, script, workflow, tooling configuration, and
 manifest must retain the project copyright and
-`GPL-3.0-or-later` SPDX header. JSON and binary formats cannot carry comments;
+`GPL-3.0-or-later` SPDX header. Nightshade Stream's own files name Oliv3rmoon
+and Nightshade Stream instead. JSON and binary formats cannot carry comments;
 their licensing is covered by `LICENSE` and `THIRD_PARTY_NOTICES.md`.
 
 Changes to `tooling/native/` must include a deterministic host check and a

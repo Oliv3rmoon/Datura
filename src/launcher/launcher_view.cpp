@@ -1380,8 +1380,8 @@ void View::update(const InputFrame &input, float dt, ui::Feedback &feedback)
                 blocks.push_back(ui::TextBlock::paragraph(line));
         }
         if (!blocks.empty() && update_offer_.notes_truncated)
-            blocks.push_back(ui::TextBlock::paragraph(
-                i18n::tr("The rest is on the app's page on homebrew.page.")));
+            blocks.push_back(
+                ui::TextBlock::paragraph(i18n::tr("The rest is on the release's page on GitHub.")));
         update_notes_.set_content(std::move(blocks));
         open_update_offer(feedback, false);
     }

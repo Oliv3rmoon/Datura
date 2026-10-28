@@ -1000,7 +1000,7 @@ int main(int argc, char **argv)
                 {120, 0, Direction::none, "notice-gone"},
             },
             "");
-    expect(update_checks == 1, "the catalog is asked once per launch");
+    expect(update_checks == 1, "GitHub is asked once per launch");
 
     // ---- an update the app can install: asked, downloaded, unpacked, then the app closes ----
     pretend.installable = true;

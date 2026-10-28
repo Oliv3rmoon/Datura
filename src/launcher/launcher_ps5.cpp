@@ -19,6 +19,7 @@
 #include "app_storage.hpp"
 #include "../../platform/ps5/ps5_thread_placement.h"
 #include "connecting_plate.hpp"
+#include "github_release.h"
 #include "self_update.h"
 #include "update_check.h"
 #include "launcher/launcher_model.hpp"
@@ -305,15 +306,46 @@ void CaptureConnecting(gfx::Renderer &renderer, View &view, Frame &frame, Select
            static_cast<long long>((sys::monotonic_us() - started) / 1000));
 }
 
-// Updates (third_party/update-check). Once per launch the worker asks the
-// homebrew.page catalog whether a newer ProsperoLight is listed: the kit
-// verifies the catalog's signature and the hashes before it believes the
-// answer. When the player says so, the release ZIP is downloaded from GitHub
-// and streamed to the self-update helper (self-updater.elf in the app's
-// folder, sent to the console's payload loader), which checks and unpacks it
+// Updates (third_party/update-check). Nightshade Stream: once per launch the
+// worker asks GitHub for the newest release of kUpdateRepository
+// (Oliv3rmoon/Nightshade-Stream; github_release.h), not the homebrew.page
+// catalog, which lists ProsperoLight's own releases: a release that is no
+// draft or pre-release, tagged with a content version higher than this one,
+// carrying PPSA99002.zip and the SHA256SUMS that gives its SHA-256. When the
+// player says so, that ZIP is downloaded from GitHub and streamed to the
+// self-update helper (self-updater.elf in the app's folder, sent to the
+// console's payload loader), which checks it against that SHA-256, unpacks it
 // beside the app and replaces the app's files once the app has closed.
 // Nothing is changed before the player confirms; a failure or a cancel leaves
 // the app as it was.
+//
+// The repository whose releases are offered, and the name the helper's
+// notification gives the app. ProsperoLight's own repositories are refused:
+// an update from them would undo the name, the look and this update source.
+constexpr const char *kUpdateRepository = "Oliv3rmoon/Nightshade-Stream";
+constexpr const char *kAppName = "Nightshade Stream";
+
+constexpr bool SameRepository(const char *a, const char *b)
+{
+    const auto lower = [](char c) { return c >= 'A' && c <= 'Z' ? static_cast<char>(c + 32) : c; };
+    for (; *a != '\0' && *b != '\0'; ++a, ++b)
+    {
+        if (lower(*a) != *b)
+            return false;
+    }
+    return *a == *b;
+}
+
+constexpr bool ProsperoLightRepository(const char *repository)
+{
+    return SameRepository(repository, "blackbearreloaded/prosperolight") ||
+           SameRepository(repository, "ledybacer/prosperolight");
+}
+static_assert(!ProsperoLightRepository(kUpdateRepository),
+              "updates come from Nightshade Stream's releases, never ProsperoLight's");
+static_assert(ProsperoLightRepository("BlackBearReloaded/ProsperoLight") &&
+              ProsperoLightRepository("LedyBacer/ProsperoLight"));
+
 std::mutex g_update_lock;
 self_update_check_result g_update_answer = SELF_UPDATE_UNKNOWN;
 self_update_offer g_update_offer{};
@@ -321,8 +353,8 @@ self_update_job g_update_job{}; // zero until the first begin, as the kit asks
 bool g_update_begun = false;
 
 #if PROSPEROLIGHT_UPDATE_DEV_OFFER
-// Development only: update-offer.txt in the app's folder replaces the
-// catalog's answer, and with it the catalog's signature. Five lines: the new
+// Development only: update-offer.txt in the app's folder replaces GitHub's
+// answer, and with it the release's SHA256SUMS. Five lines: the new
 // content version, the release's name, its ZIP on GitHub, its SHA-256, its
 // size in bytes; any further lines are the release notes.
 bool DevelopmentOffer(self_update_offer *out)
@@ -355,13 +387,13 @@ bool DevelopmentOffer(self_update_offer *out)
     const std::string param = std::string(storage::paths().app) + "/sce_sys/param.json";
     if (!complete || !update_check_read_param(param.c_str(), filled.title, filled.installed))
         return false;
-    std::snprintf(filled.name, sizeof(filled.name), "ProsperoLight");
+    std::snprintf(filled.name, sizeof(filled.name), "%s", kAppName);
     std::snprintf(filled.available, sizeof(filled.available), "%s", lines[0]);
     std::snprintf(filled.version, sizeof(filled.version), "%s", lines[1]);
     std::snprintf(filled.artifact, sizeof(filled.artifact), "%s", lines[2]);
     std::snprintf(filled.sha256, sizeof(filled.sha256), "%s", lines[3]);
     filled.size = std::strtoull(lines[4], nullptr, 10);
-    // Like the catalog, only a newer version is offered (content versions compare as text).
+    // Like GitHub's check, only a newer version is offered (content versions compare as text).
     if (std::strcmp(filled.available, filled.installed) <= 0)
         return false;
     *out = filled;
@@ -376,11 +408,16 @@ bool CheckForUpdate(UpdateOffer *offer)
                                          "not-installable"};
     const std::int64_t started = sys::monotonic_us();
     self_update_offer found{};
-    self_update_check_result state = self_update_check_self(&found);
+    github_release_report report{};
+    self_update_check_result state =
+        self_update_check_self_from(kUpdateRepository, kAppName, &found, &report);
+    PL_LOG("[PL] update check: github %s releases: %s (HTTP %d, error %d, redirects %d, tag %s)",
+           kUpdateRepository, github_release_reason_text(report.reason), report.http_status,
+           report.platform_error, report.redirects, report.tag[0] != '\0' ? report.tag : "-");
 #if PROSPEROLIGHT_UPDATE_DEV_OFFER
     if (DevelopmentOffer(&found))
     {
-        PL_LOG("[PL] update check: DEVELOPMENT: update-offer.txt replaces the catalog's answer");
+        PL_LOG("[PL] update check: DEVELOPMENT: update-offer.txt replaces GitHub's answer");
         state = SELF_UPDATE_AVAILABLE;
     }
 #endif

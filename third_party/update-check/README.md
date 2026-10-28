@@ -23,6 +23,29 @@ it reads ZIP archives with `third_party/miniz` (MIT). `make self-update-helper` 
 `build/self-update/self-updater.elf`, which every package carries. `make test-self-update` runs
 the engine against the helper on the PC (`third_party/self-update-helper/test_self_update.cpp`).
 
+## Nightshade Stream: updates from GitHub releases
+
+`github_release.{h,c}` are Nightshade's (Oliv3rmoon/Nightshade,
+`headless/update_check/github_release.*`), as Nightshade TV has them, for this repository's
+releases: the app asks GitHub for the newest release of the repository it names
+(`kUpdateRepository` in `src/launcher/launcher_ps5.cpp`, `Oliv3rmoon/Nightshade-Stream`) instead
+of the catalog, and fills the same offer, so the download, the helper and the dialog are the
+kit's, unchanged. The release must not be a draft or a pre-release, its tag must be a content
+version higher than the app's (the workflow tags a release with its `contentVersion`), and it
+must carry `PPSA99002.zip` and a `SHA256SUMS` that lists that ZIP on one well-formed line. Its
+trust is TLS and the release's own `SHA256SUMS`, not the catalog's signature (see the header).
+The launcher never asks the catalog, which lists ProsperoLight's own releases: an update from
+there would undo the name, the look and this update source; a build naming ProsperoLight's own
+repository does not compile.
+
+For it, `update_check.c` has three more readers, as Nightshade's kit has them
+(`update_check_json_value`, `update_check_json_uint` and `update_check_json_array_next`), and
+refuses a NUL inside a string it copies; `self_update_ps5.c` has `self_update_check_self_from`
+and `self_update_check_as_from`, and its `console_fetch` tells an answer too long for its buffer
+(`SELF_UPDATE_FETCH_TOO_LARGE`) from a failed transfer. The host check is
+`tests/github_release_check.cc`, built and run by `tests/test_github_release.py`
+(`make test-integration`).
+
 The build links PacBrew's libcurl (`PACBREW_PACKAGES`) and wraps `fcntl`. The launcher asks once
 per launch on its worker thread (`CheckForUpdate` in `src/launcher/launcher_ps5.cpp`); the view
 shows the offer, the progress and a failure (`update_modal` in `src/launcher/launcher_view.cpp`),
@@ -30,5 +53,6 @@ and `main` closes the app once the update is staged.
 
 For trying it before a release is listed: a build made with `UPDATE_DEV_OFFER=1` takes the
 offer from `update-offer.txt` in the app's folder (five lines: new content version, release
-name, ZIP on GitHub, SHA-256, size; further lines are the release notes) instead of the catalog. It skips the catalog's signature:
+name, ZIP on GitHub, SHA-256, size; further lines are the release notes) instead of GitHub's
+answer. It skips the release's `SHA256SUMS`:
 never ship such a build. `UPDATE_AUTO_ACCEPT=<seconds>` makes it accept the offer by itself.

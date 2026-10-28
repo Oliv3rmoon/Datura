@@ -1,4 +1,100 @@
 <p align="center">
+  <img src="sce_sys/icon0.png" width="128" alt="Nightshade Stream icon">
+</p>
+
+<h1 align="center">Nightshade Stream</h1>
+
+<p align="center">
+  <strong>Moonlight game streaming for PS5 homebrew, by Oliv3rmoon: everything in ProsperoLight, in Nightshade's black and red, updated from its own releases.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Oliv3rmoon/Nightshade-Stream/releases/latest"><img src="https://img.shields.io/github/v/release/Oliv3rmoon/Nightshade-Stream?style=for-the-badge&label=download&color=e5484d&labelColor=0d0d0f" alt="Download the latest release"></a>
+  <a href="https://discord.gg/pSqgRU3YP9"><img src="https://img.shields.io/badge/discord-nightly-0d0d0f?style=for-the-badge&logo=discord&logoColor=e5484d" alt="Discord: nightly"></a>
+  <a href="https://buymeacoffee.com/oliv3rmoon"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-0d0d0f?style=for-the-badge&logo=buymeacoffee&logoColor=e5484d" alt="Buy me a coffee"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-0d0d0f?style=for-the-badge&labelColor=0d0d0f&color=e5484d" alt="GPL-3.0-or-later"></a>
+</p>
+
+Nightshade Stream is Oliv3rmoon's release of ProsperoLight by BlackBearReloaded, a port of
+Moonlight. It is [ProsperoLight](https://github.com/blackbearreloaded/ProsperoLight) 01.000.110,
+the native Moonlight client for PS5 homebrew that streams games and the desktop from a
+Sunshine-compatible PC, with the look of [Nightshade](https://github.com/Oliv3rmoon/Nightshade) and
+updates from this repository. The current release is **01.001.000**; what changed is in the
+[changelog](CHANGELOG.md).
+
+## What you get
+
+- **Everything in ProsperoLight.** Hardware H.264 and HEVC (HDR10 included) at up to 4K and 120 FPS,
+  frame pacing and VRR, PyroWave, up to four DualSense controllers with haptics and adaptive
+  triggers, keyboard and mouse, home-screen forwarders and a launcher in 31 languages. Nothing is
+  taken out, and it streams with ProsperoLight 01.000.110's measured build settings.
+- **Nightshade's look.** Black and red, clean and dark: black glass panels, a red accent, a
+  near-black sky with a low red glow, and the nightshade flower with the stream going out of it as
+  the mark, on the icon and the home-screen pictures.
+- **Updates from its own releases.** At the start it asks
+  [Oliv3rmoon/Nightshade-Stream](https://github.com/Oliv3rmoon/Nightshade-Stream/releases) for a
+  newer release, shows its notes, and installs it with **Update now**. It never offers
+  ProsperoLight's own releases, which would put the old look back.
+- **Your PCs stay paired.** It keeps ProsperoLight's title ID and data folder, so saved PCs,
+  pairing and settings carry over.
+
+## Install
+
+1. Close ProsperoLight (or Nightshade Stream).
+2. Download `PPSA99002.zip` from the [latest release](https://github.com/Oliv3rmoon/Nightshade-Stream/releases/latest)
+   and unzip it.
+3. Copy its `PPSA99002` folder over your current one (`/data/homebrew/PPSA99002`), replacing the
+   files.
+
+It keeps ProsperoLight's title ID, so it replaces ProsperoLight, and your PCs, pairing and settings
+stay as they are (they live in `/data/prosperolight`). The home screen calls it
+**Nightshade Stream**; the new icon and pictures show once the title is registered again (remove
+its old registration from the home screen and let your loader, such as ShadowMountPlus, register
+it). To go back, copy an
+[official release](https://github.com/blackbearreloaded/ProsperoLight/releases) over it the same
+way. Don't leave a `PPSA99002.exfat` or `PPSA99002.ffpfsc` mounted beside the folder.
+
+## Updates
+
+Once per launch Nightshade Stream asks GitHub for the newest release of
+[Oliv3rmoon/Nightshade-Stream](https://github.com/Oliv3rmoon/Nightshade-Stream/releases) that is
+not a pre-release. When it is newer than the one installed and carries `PPSA99002.zip` and
+`SHA256SUMS`, the app offers **Update now**, **What's new** and **Skip**; **Update now** downloads
+the ZIP, checks it against `SHA256SUMS`, and replaces the app's files once it has closed. Your data
+in `/data/prosperolight` is not touched. Like ProsperoLight, it needs a folder installation with
+filesystem access for this (the console's payload loader on port 9021); otherwise update by
+copying the folder as above. A release ZIP built by this repository's workflow can be checked with
+`gh attestation verify PPSA99002.zip -R Oliv3rmoon/Nightshade-Stream`.
+
+## Requests, bugs and support
+
+- **Ask for a fix or a feature:** [open an issue](https://github.com/Oliv3rmoon/Nightshade-Stream/issues/new/choose),
+  or ask in **[nightly on Discord](https://discord.gg/pSqgRU3YP9)**.
+- **Bugs in my releases:** open an issue here. Turn on **Diagnostic logs** in Settings first; the
+  About page shows where the logs are. Leave pairing PINs, host names and addresses out.
+- **If my work helps you,** you can [buy me a coffee](https://buymeacoffee.com/oliv3rmoon).
+
+## Credits
+
+- **[ProsperoLight](https://github.com/blackbearreloaded/ProsperoLight)**, by
+  **BlackBearReloaded** ([GitHub](https://github.com/blackbearreloaded)), who created it and wrote
+  it, with its contributors Nikita Dybov and Kris Escobar and everyone who tests it. Nightshade
+  Stream is their app with a new look and a new update source; the credit for it is theirs.
+- **[Moonlight](https://moonlight-stream.org)** and
+  [moonlight-common-c](https://github.com/moonlight-stream/moonlight-common-c) (limelight), whose
+  protocol it speaks, and **[Sunshine](https://github.com/LizardByte/Sunshine)**, the host on the
+  PC. All credit for the streaming protocol goes to the Moonlight developers and contributors.
+- **[Nightshade](https://github.com/Oliv3rmoon/Nightshade)** and Nightshade TV, whose palette, art
+  code and GitHub update check this release reuses.
+
+Nightshade Stream is an unofficial release. ProsperoLight is made by BlackBearReloaded and its
+contributors; neither they, the Moonlight or Sunshine projects, nor Sony endorse Nightshade Stream.
+It is free software under the GNU General Public License, version 3 or later, as ProsperoLight is
+([LICENSE](LICENSE)). Everything below is the official README.
+
+---
+
+<p align="center">
   <img src="sce_sys/icon0.png" width="128" alt="ProsperoLight icon">
 </p>
 
@@ -7,14 +103,6 @@
 <p align="center">
   <strong>Moonlight game streaming, natively on PlayStation 5.</strong><br>
   Stream games and your desktop from a Sunshine-compatible PC to a homebrew-enabled PS5.
-</p>
-
-<p align="center">
-  <a href="https://github.com/blackbearreloaded/ProsperoLight/releases"><img src="https://img.shields.io/github/v/release/blackbearreloaded/ProsperoLight?include_prereleases&label=release" alt="Latest release"></a>
-  <img src="https://img.shields.io/badge/platform-PS5%20homebrew-003791" alt="PS5 homebrew">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue" alt="GPL-3.0-or-later"></a>
-</br>
-<a href="https://discord.gg/zjKNPhQag"><img src="https://dcbadge.limes.pink/api/server/https://discord.gg/zjKNPhQag" alt="Latest release"></a>
 </p>
 
 <p align="center">

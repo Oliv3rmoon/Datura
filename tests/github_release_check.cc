@@ -544,8 +544,7 @@ void GitHubCheck()
     // followed.
     const std::string old_sums = "https://github.com/Oliv3rmoon/ProsperoLight-Nightshade/releases/"
                                  "download/01.001.010/SHA256SUMS";
-    const auto redirect = [](int status, const std::string &to)
-    {
+    const auto redirect = [](int status, const std::string &to) {
         return std::make_pair(status, "{\"message\":\"Moved Permanently\",\"url\":\"" + to + "\"}");
     };
     const auto moved = [&](int status)

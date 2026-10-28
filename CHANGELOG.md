@@ -1,5 +1,59 @@
 # Changelog
 
+What changed in each release of Nightshade Stream, newest first. A release's notes on GitHub are in
+`docs/releases/<version>.md`. What changed in ProsperoLight before Nightshade Stream follows, from
+01.000.110 down.
+
+## Nightshade Stream v1.001.000: the first Nightshade Stream, based on ProsperoLight 01.000.110
+
+Nightshade Stream is Oliv3rmoon's release of ProsperoLight by BlackBearReloaded, a port of
+Moonlight: ProsperoLight 01.000.110 with a new name, Nightshade's look and updates from
+Oliv3rmoon/Nightshade-Stream. What changed:
+
+- **The name.** The PS5 home screen, the header (a wordmark, "Nightshade" with STREAM under it),
+  the About page, the version on the Settings page, the update dialog and its notices, the
+  stream's notifications and errors, and the on-screen keyboard say Nightshade Stream, in all 31
+  languages. The About page says "Nightshade Stream is Oliv3rmoon's release of ProsperoLight by
+  BlackBearReloaded, a port of Moonlight." and keeps the Moonlight, Sunshine and ProsperoLight
+  contributors' credits.
+- **The look.** Nightshade's palette (its "nightly" theme): near-black pages, black glass panels, a
+  red accent (#e5484d) for the main actions, the focus, the selections and the connecting bar,
+  cool white text, an amber for warnings, and a near-black sky with a low red glow. Corners are
+  Nightshade's, tighter.
+- **The art.** The mark is the nightshade flower with the stream going out of it, three arcs of
+  red light. The icon (a black controller lit red, the flower on its touchpad, four berries for its
+  face buttons), the home background (Nightshade's moon, a crescent of red light, with the
+  nightshade flowering in front of it) and the launch picture (Nightshade's eclipse round the
+  flower) are drawn by `tools/render-home-art.py`, in Nightshade's style.
+- **Updates from this repository.** At the start the app asks
+  [Oliv3rmoon/Nightshade-Stream](https://github.com/Oliv3rmoon/Nightshade-Stream/releases) for its
+  newest release that is not a pre-release, and offers it when it is newer and carries
+  `PPSA99002.zip` and `SHA256SUMS`; **Update now** checks the ZIP against `SHA256SUMS`. It never
+  asks the homebrew.page catalog, so ProsperoLight's own releases, which would put the old look
+  back, are never offered. The update texts say GitHub.
+- **Release builds.** A version tag pushed to Oliv3rmoon/Nightshade-Stream builds `PPSA99002.zip`
+  with ProsperoLight 01.000.110's measured settings and publishes it with `SHA256SUMS` as the
+  latest release. Without a build-cache snapshot the build starts from nothing instead of failing.
+- **What stays.** The title ID (PPSA99002) and the data folder (`/data/prosperolight`), so it
+  installs over ProsperoLight and keeps your PCs, pairing, settings and forwarder list. Logs and
+  crash reports keep their names. Everything else is ProsperoLight 01.000.110.
+
+Built and checked by the host tests; not yet run on a console.
+
+### Install
+
+Close ProsperoLight, extract `PPSA99002.zip` and copy its `PPSA99002/` folder over your current one
+(`/data/homebrew/PPSA99002`), and start it. ProsperoLight doesn't offer this release itself (it asks
+homebrew.page), so this one is copied by hand; from it on, **Update now** applies the next one. Keep
+only one installation for this title. To go back, copy an official
+[ProsperoLight release](https://github.com/blackbearreloaded/ProsperoLight/releases) over it the
+same way.
+
+> [!NOTE]
+> The new icon and pictures appear once the title is registered again: remove its old registration
+> from the PS5 home screen, then let ShadowMountPlus register the app. Everything else works
+> without this step.
+
 ## 01.000.110
 
 ### Stable: Punktfunk hosts, more box art, no wait before the stream

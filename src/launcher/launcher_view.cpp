@@ -170,27 +170,95 @@ ui::KeyboardLayout address_layout()
     return layout;
 }
 
+// Nightshade Stream's mark, as tools/render-home-art.py draws it for the icon: Nightshade's flower
+// (five red petals round a pale star, in a red light) with the stream going out of it, three arcs
+// of light to its upper right. A petal is a narrow base, a round middle and a pointed tip, each
+// turned to its place, with a vein along it (Nightshade TV's draw_mark).
+void draw_mark(gfx::DrawList &list, float cx, float cy, float size, const ui::Theme &theme)
+{
+    const Color red = theme.accent;
+    const Color deep = Color::rgb(0x5a1419);
+    const float radius = size * 0.5f;
+    list.glow({cx - radius * 0.6f, cy - radius * 0.6f, radius * 1.2f, radius * 1.2f}, radius * 0.6f,
+              size * 0.45f, red.with_alpha(0.3f));
+    // The stream: arcs round the flower's heart, centred on its upper right, each fainter.
+    for (int k = 0; k < 3; ++k)
+    {
+        const float r = radius * (0.80f + 0.2f * static_cast<float>(k));
+        const float sweep = 0.95f - 0.12f * static_cast<float>(k);
+        list.arc(cx, cy, r, std::max(1.5f, size * 0.055f), 0.7854f - sweep * 0.5f, sweep,
+                 red.with_alpha(0.9f - 0.25f * static_cast<float>(k)));
+    }
+    // The flower, a little to the lower left so the stream has room.
+    const float fx = cx - radius * 0.1f, fy = cy + radius * 0.1f, petal = radius * 0.74f;
+    for (int k = 0; k < 5; ++k)
+    {
+        const float angle = static_cast<float>(k) * 1.2566371f; // a fifth of a turn
+        const float dx = std::sin(angle), dy = -std::cos(angle);
+        // From `from` to `to` (fractions of the petal) along it, `wide` across it.
+        const auto piece = [&](float from, float to, float wide)
+        {
+            const float mid = (from + to) * 0.5f * petal;
+            const float w = wide * petal, h = (to - from) * petal;
+            list.rotated_rect({fx + dx * mid - w * 0.5f, fy + dy * mid - h * 0.5f, w, h},
+                              std::min(w, h) * 0.5f, angle, red);
+        };
+        piece(0.08f, 0.48f, 0.22f);
+        piece(0.30f, 0.80f, 0.50f);
+        const float tip = 0.81f * petal, tip_h = 0.38f * petal, tip_w = 0.40f * petal;
+        list.triangle({fx + dx * tip - tip_w * 0.5f, fy + dy * tip - tip_h * 0.5f, tip_w, tip_h},
+                      red, 0.0f, angle);
+        list.line(fx + dx * petal * 0.24f, fy + dy * petal * 0.24f, fx + dx * petal * 0.8f,
+                  fy + dy * petal * 0.8f, std::max(1.0f, size * 0.02f), deep.with_alpha(0.6f));
+    }
+    list.star(fx, fy, petal * 0.42f, deep.with_alpha(0.86f));
+    list.star(fx, fy, petal * 0.28f, Color::rgb(0xfff1e6));
+}
+
 } // namespace
 
 ui::Theme moonlight_theme()
 {
+    // Nightshade Stream: Nightshade's own palette (its "nightly" theme, Oliv3rmoon/Nightshade
+    // headless/prosperoeden/pe/ui/theme.cpp), as Nightshade TV has it: near-black pages, black
+    // glass panels, a red accent for the main actions, the focus and the selections, cool white
+    // text, an amber that is never the accent for warnings, and a near-black sky with a low red
+    // glow. The kit's Acrylic theme is still the recipe (glass surfaces, hairlines of light).
     ui::Theme t = theme_by_id("acrylic");
-    t.id = "moonlight";
-    t.name = "Moonlight";
+    t.id = "nightly";
+    t.name = "Nightshade";
     t.family = i18n::tr("Frosted glass");
-    t.summary = i18n::tr("ProsperoLight's night blue under frosted panels");
-    t.backdrop.colors[0] = Color::rgb(0x030816);
-    t.backdrop.colors[1] = Color::rgb(0x0a1a4a);
-    t.backdrop.colors[2] = Color::rgb(0x1f5fd0);
-    t.backdrop.colors[3] = Color::rgb(0x1fa6b8);
-    t.page = Color::rgb(0x081029);
-    t.surface = Color::rgb(0x0e1a42, 0.5f);
-    t.primary = Color::rgb(0x8fd3ff);
-    t.on_primary = Color::rgb(0x03203a);
-    t.accent = Color::rgb(0x8fd3ff);
-    t.success = Color::rgb(0x5fe0a6);
-    t.warning = Color::rgb(0xf6c86b);
-    t.danger = Color::rgb(0xff6b7a);
+    t.summary = i18n::tr("Nightshade's black and red under frosted panels");
+    t.backdrop.colors[0] = Color::rgb(0x0e0e11);
+    t.backdrop.colors[1] = Color::rgb(0x050506);
+    // The clouds stay dark: a mood behind text, not a picture. Both are Nightshade's red: its
+    // backdrop's low glow, and the deep red under it.
+    t.backdrop.colors[2] = Color::rgb(0x96121c);
+    t.backdrop.colors[3] = Color::rgb(0x5a1419);
+    t.page = Color::rgb(0x09090b);
+    t.surface = Color::rgb(0x0e0e11, 0.5f);
+    t.surface_high = Color::rgb(0xffffff, 0.1f);
+    t.text = Color::rgb(0xededf0);
+    t.text_muted = Color::rgb(0xededf0, 0.62f);
+    t.primary = Color::rgb(0xe5484d);
+    t.on_primary = Color::rgb(0x0b0b0d);
+    t.secondary = Color::rgb(0xffffff, 0.08f);
+    t.on_secondary = Color::rgb(0xededf0);
+    t.accent = Color::rgb(0xe5484d);
+    t.outline = Color::rgb(0xffffff, 0.12f);
+    t.focus = Color::rgb(0xe5484d);
+    t.shadow = Color::rgb(0x000000, 0.45f);
+    t.light = Color::rgb(0xffffff, 0.22f);
+    t.success = Color::rgb(0x6fe3ae);
+    t.warning = Color::rgb(0xf0a35e);
+    t.danger = Color::rgb(0xff7a7a);
+    // Nightshade's corners, tighter than the kit's glass.
+    t.radius = 12.0f;
+    t.radius_card = 20.0f;
+    t.border = 1.5f;
+    t.pill_chips = true;
+    t.shadow_offset = 12.0f;
+    t.shadow_blur = 32.0f;
     t.sounds = audio::SoundSet::glass;
     return t;
 }
@@ -1957,7 +2025,7 @@ void View::draw(Frame &frame) const
     draw_connect_bar(above);
     if (can_hold_to_exit() && exit_progress_ > 0.0f)
     {
-        list.rounded_rect({640, 930, 640, 100}, 16, Color::rgb(0x09172c));
+        list.rounded_rect({640, 930, 640, 100}, 16, Color::rgb(0x0e0e11));
         paint.label(i18n::tr("Hold to close app"), 664, 966, 24, theme.text);
         list.rounded_rect({664, 988, 592, 14}, 7, theme.text_muted.with_alpha(.25f));
         list.rounded_rect({664, 988, 592 * exit_progress_, 14}, 7, theme.primary);
@@ -1968,15 +2036,11 @@ void View::draw_header(ui::Canvas &canvas, ui::Painter &paint) const
 {
     gfx::DrawList &list = canvas.list;
     const ui::Theme &t = theme_;
-    // The mark: a crescent on a small plate, then the name. Nightshade Stream: the name is a
-    // wordmark, "Nightshade" with STREAM under it in the accent, so the whole name keeps clear of
-    // the L1 hint before the tabs.
+    // The mark, Nightshade's flower with the stream going out of it, then the name: a wordmark,
+    // "Nightshade" with STREAM under it in the accent, so the whole name keeps clear of the L1
+    // hint before the tabs.
     const Rect plate{kMargin, 62.0f, 52.0f, 52.0f};
-    list.gradient_rect(plate, 14.0f, gfx::mix(t.primary, Color::rgb(0xffffff), 0.15f),
-                       gfx::mix(t.primary, t.page, 0.45f));
-    const Color cut = gfx::mix(t.primary, t.page, 0.3f);
-    list.circle(plate.cx() - 2.0f, plate.cy() + 1.0f, 15.0f, t.on_primary);
-    list.circle(plate.cx() + 6.0f, plate.cy() - 5.0f, 13.0f, cut);
+    draw_mark(list, plate.cx(), plate.cy(), 56.0f, t);
     paint.heading("Nightshade", kMargin + 70.0f, 90.0f, 30.0f, paint.page_text());
     ui::text(list, canvas.fonts.semibold, "STREAM", kMargin + 71.0f, 110.0f, 15.0f, t.accent,
              gfx::Align::left, 4.5f);

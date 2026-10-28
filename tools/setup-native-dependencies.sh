@@ -118,8 +118,14 @@ if [[ -z $zlib_library ]]; then
 fi
 
 if ! $skip_sdk && [[ ! -f $lapy_source/source/lapy_elevation_protocol.h ]]; then
-    git clone -q https://github.com/blackbearreloaded/PS5-Lapy-JB-Daemon.git "$lapy_source"
-    git -C "$lapy_source" fetch -q origin "$lapy_commit"
+    # The daemon's own repository is gone; the pinned commit is checked below, so a mirror that
+    # still has it gives the same code.
+    for lapy_url in https://github.com/ArkSama/PS5-Lapy-JB-Daemon.git \
+                    https://github.com/Phononenom/PS5-Lapy-JB-Daemon-bbr.git; do
+        rm -rf -- "$lapy_source"
+        GIT_TERMINAL_PROMPT=0 git clone -q "$lapy_url" "$lapy_source" &&
+            GIT_TERMINAL_PROMPT=0 git -C "$lapy_source" fetch -q origin "$lapy_commit" && break
+    done
     git -C "$lapy_source" checkout -q --detach "$lapy_commit"
 fi
 if ! $skip_sdk; then

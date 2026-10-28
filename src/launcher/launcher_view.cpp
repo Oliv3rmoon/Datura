@@ -2812,9 +2812,17 @@ void View::draw_update(ui::Canvas &canvas) const
     list.pop_opacity();
 }
 
+// The connecting bar's fill: the theme's red, lifted toward white. On the stream's picture
+// only its brightness sets it apart from the track over the red glow, and the red alone is too
+// dark for that.
+static Color connect_fill(const Color &primary)
+{
+    return gfx::mix(primary, Color::rgb(0xffffff), 0.4f);
+}
+
 View::ConnectBar View::connecting_bar() const
 {
-    return {kConnectBar, theme_.primary, load_progress_};
+    return {kConnectBar, connect_fill(theme_.primary), load_progress_};
 }
 
 // The connecting screen's bar. Its track and its label belong to the picture
@@ -2835,7 +2843,7 @@ void View::draw_connect_bar(ui::Canvas &canvas) const
     if (!plate_ && load_progress_ > 0.0f)
         list.rounded_rect({kConnectBar.x, kConnectBar.y,
                            std::max(kConnectBar.w * load_progress_, kConnectBar.h), kConnectBar.h},
-                          radius, theme_.primary);
+                          radius, connect_fill(theme_.primary));
     list.pop_opacity();
 }
 

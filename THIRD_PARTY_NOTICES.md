@@ -20,6 +20,13 @@ ProsperoLight exists thanks to the maintainers and contributors of:
 The original ProsperoLight artwork and selection music are distributed under
 the project license.
 
+In Nightshade Stream, Oliv3rmoon's release of ProsperoLight, the icon and the
+home-screen pictures (`sce_sys/icon0.png`, `pic0.dds` and `pic1.dds` with their
+PNGs and source PNGs) take the place of ProsperoLight's artwork; the selection
+music is ProsperoLight's. They are drawn by `tools/render-home-art.py`, after
+Nightshade TV's and Nightshade's (Oliv3rmoon/Nightshade), Copyright (C) 2026
+Oliv3rmoon, and distributed under GPL-3.0-or-later.
+
 ## Native build dependencies
 
 The application build uses LLVM/Clang/lld, zlib 1.3.2, and the public

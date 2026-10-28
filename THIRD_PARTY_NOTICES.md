@@ -113,7 +113,9 @@ self-update engine and its helper of
 (`examples/update-check`, `examples/self-update`, `examples/self-update-helper`),
 Copyright (C) 2026 BlackBearReloaded, GPL-3.0-or-later. The helper reads ZIP archives with
 [miniz](https://github.com/richgel999/miniz) (`third_party/miniz`, MIT; its licence is
-`third_party/licenses/miniz.txt` and ships with the app). It asks the [homebrew.page](https://homebrew.page) catalog
+`third_party/licenses/miniz.txt` and ships with the app). In Nightshade Stream it asks
+GitHub for the releases of Oliv3rmoon/Nightshade-Stream (`github_release.{h,c}`, Copyright (C)
+2026 Oliv3rmoon, GPL-3.0-or-later, after Nightshade's) instead of the homebrew.page catalog,
 through libcurl, which the build takes from the pinned PacBrew release
 v0.40.2 and links statically with its dependencies. Their licence texts are in
 `third_party/licenses/`:

@@ -56,6 +56,20 @@ class GitHubReleaseTest(unittest.TestCase):
         for refused in ("blackbearreloaded/prosperolight", "ledybacer/prosperolight"):
             self.assertIn(f'"{refused}"', launcher)
 
+    def test_a_tag_publishes_the_release_the_app_offers(self):
+        # A version tag builds PPSA99002.zip and publishes it with SHA256SUMS as the latest
+        # release under Nightshade Stream's name; the build cache is a pre-release that is never
+        # the latest, so releases/latest never names it.
+        workflow = (ROOT / ".github/workflows/tooling.yml").read_text(encoding="utf-8")
+        self.assertIn('--title "Nightshade Stream $GITHUB_REF_NAME" "${release_flags[@]}"', workflow)
+        self.assertIn("release_flags=(--latest)", workflow)
+        self.assertIn('cp "docs/releases/$GITHUB_REF_NAME.md" release-notes.md', workflow)
+        self.assertIn("01.000.110|01.001.000)", workflow)
+        self.assertIn("No build-cache snapshot here; building without one.", workflow)
+        cache = (ROOT / ".github/workflows/build-cache.yml").read_text(encoding="utf-8")
+        self.assertIn("gh release create build-cache --repo \"$GITHUB_REPOSITORY\" --prerelease "
+                      "--latest=false", cache)
+
 
 if __name__ == "__main__":
     unittest.main()

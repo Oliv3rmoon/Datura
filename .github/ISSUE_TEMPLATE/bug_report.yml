@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 name: "Bug report"
-description: "Something in ProsperoLight does not work as it should"
+description: "Something in Nightshade Stream does not work as it should"
 title: "[Bug] "
 labels: ["bug"]
 body:
@@ -18,7 +18,7 @@ body:
     id: version
     attributes:
       label: "App version"
-      description: "The release you installed, for example 01.000.050"
+      description: "The release you installed, for example 01.001.000"
     validations:
       required: true
   - type: input
@@ -60,7 +60,8 @@ body:
     attributes:
       label: "How did you install it?"
       options:
-        - "ProsperoStore"
+        - "Update in the app"
+        - "GitHub release ZIP (Oliv3rmoon/Nightshade-Stream)"
         - "Manual copy (USB or FTP)"
         - "Built from source"
     validations:

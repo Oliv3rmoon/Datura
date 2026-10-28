@@ -1,4 +1,7 @@
 # ps5-native-app-boilerplate - ProsperoLight lint, test, build, and release validation.
+# Nightshade Stream (Oliv3rmoon/Nightshade-Stream): a version tag pushed to that repository builds
+# PPSA99002.zip and publishes it, with SHA256SUMS, as the latest release, which the app's update
+# check then offers (third_party/update-check/github_release.h).
 # Copyright (C) 2026 BlackBearReloaded
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -83,12 +86,14 @@ jobs:
         run: |
           if [ -z "$(ls -A "$CCACHE_DIR" 2>/dev/null)" ]; then
             url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/build-cache/ccache-clang18.tar"
-            if curl -fsSL --retry 3 -o "$RUNNER_TEMP/ccache-clang18.tar" "$url"; then
-              mkdir -p "$CCACHE_DIR"
-              tar -xf "$RUNNER_TEMP/ccache-clang18.tar" -C "$CCACHE_DIR"
-              rm "$RUNNER_TEMP/ccache-clang18.tar"
+            # This repository's own snapshot; a repository without one (yet) builds from nothing.
+            if curl -fsSL --retry 3 -o "$RUNNER_TEMP/ccache-clang18.tar" "$url" &&
+                mkdir -p "$CCACHE_DIR" && tar -xf "$RUNNER_TEMP/ccache-clang18.tar" -C "$CCACHE_DIR"; then
               echo "::notice title=Compiler cache::Started from the build-cache snapshot."
+            else
+              echo "::notice title=Compiler cache::No build-cache snapshot here; building without one."
             fi
+            rm -f "$RUNNER_TEMP/ccache-clang18.tar"
           fi
 
       - name: Configure parallel compilation
@@ -153,9 +158,11 @@ jobs:
       # The app folder is the only output; no image is built, here or by a local target.
       - name: Build the release folder
         run: |
-          # Validated streaming releases retain the measured build settings.
+          # Validated streaming releases retain the measured build settings. Nightshade Stream
+          # 01.001.000 is built as ProsperoLight 01.000.110 was; a later release is added here
+          # once it has been measured too.
           case "$CONTENT_VERSION" in
-            01.000.062|01.000.070|01.000.080|01.000.090|01.000.095|01.000.100|01.000.110)
+            01.000.062|01.000.070|01.000.080|01.000.090|01.000.095|01.000.100|01.000.110|01.001.000)
               make app FEC_SIMD=1 OPUS_SIMD=1 PERFORMANCE_DETAIL=1 FLIP_POLL_US=200 INPUT_POLL_US=2000 VIDEO_SLICES_PER_FRAME=8
               ;;
             *)
@@ -242,7 +249,9 @@ jobs:
       - name: Check out release notes
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          sparse-checkout: CHANGELOG.md
+          sparse-checkout: |
+            CHANGELOG.md
+            docs/releases
           sparse-checkout-cone-mode: false
 
       - name: Download verified build
@@ -275,9 +284,15 @@ jobs:
           echo "archive=${archives[0]#./}" >> "$GITHUB_OUTPUT"
           echo "checksum=${checksums[0]#./}" >> "$GITHUB_OUTPUT"
 
+      # Nightshade Stream: docs/releases/<tag>.md is the release's page when there is one;
+      # otherwise the tag's section of CHANGELOG.md, as ProsperoLight's releases had.
       - name: Prepare release notes
         shell: bash
         run: |
+          if [[ -f docs/releases/$GITHUB_REF_NAME.md ]]; then
+            cp "docs/releases/$GITHUB_REF_NAME.md" release-notes.md
+            exit 0
+          fi
           awk -v version="$GITHUB_REF_NAME" '
             $0 == "## " version { found=1; next }
             found && /^## / { exit }
@@ -296,7 +311,7 @@ jobs:
           set -euo pipefail
           TAG=$GITHUB_REF_NAME
           assets=("release/$ARCHIVE" "release/$CHECKSUM")
-          release_flags=()
+          release_flags=(--latest)
           case "$GITHUB_REF_NAME" in
             01.000.062|01.000.070|01.000.080|01.000.090)
               release_flags=(--prerelease --latest=false)
@@ -304,8 +319,8 @@ jobs:
           esac
           # The files of a release come from the run of its tag, once. A release without a
           # ZIP (notes written in advance, or a draft) gets them and keeps its title and
-          # notes; one that already has a ZIP is never touched, because the catalog records
-          # that ZIP's checksum.
+          # notes; one that already has a ZIP is never touched, because the app's update check
+          # takes that ZIP's checksum from its SHA256SUMS.
           if names=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name' 2>/dev/null); then
             has_zip=0
             while IFS= read -r name; do
@@ -317,9 +332,10 @@ jobs:
               gh release upload "$TAG" "${assets[@]}" --repo "$GITHUB_REPOSITORY"
             fi
           else
+            # The latest release, which the app's update check reads (releases/latest).
             gh release create "$GITHUB_REF_NAME" "${assets[@]}" \
               --repo "$GITHUB_REPOSITORY" \
               --verify-tag \
               --notes-file release-notes.md \
-              --title "ProsperoLight $GITHUB_REF_NAME" "${release_flags[@]}"
+              --title "Nightshade Stream $GITHUB_REF_NAME" "${release_flags[@]}"
           fi

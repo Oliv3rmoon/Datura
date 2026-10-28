@@ -778,7 +778,7 @@ void *worker(void *)
                 if (s.shown.load() == shown && counters.failed && samples)
                 {
                     record_error("VideoOut stopped presenting frames; reconnect or "
-                                 "restart ProsperoLight");
+                                 "restart Nightshade Stream");
                     if (error_callback)
                         error_callback(-1);
                     return nullptr;
@@ -1002,7 +1002,7 @@ void cleanup()
         session.reset();
         const int release_result = wsi_ps5_release_videoout();
         if (release_result)
-            record_error("VideoOut release failed; restart ProsperoLight before "
+            record_error("VideoOut release failed; restart Nightshade Stream before "
                          "streaming again");
         log_line("PyroWave VideoOut handoff complete: rc=%08x", unsigned(release_result));
     }

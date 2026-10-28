@@ -1968,14 +1968,18 @@ void View::draw_header(ui::Canvas &canvas, ui::Painter &paint) const
 {
     gfx::DrawList &list = canvas.list;
     const ui::Theme &t = theme_;
-    // The mark: a crescent on a small plate, then the name.
+    // The mark: a crescent on a small plate, then the name. Nightshade Stream: the name is a
+    // wordmark, "Nightshade" with STREAM under it in the accent, so the whole name keeps clear of
+    // the L1 hint before the tabs.
     const Rect plate{kMargin, 62.0f, 52.0f, 52.0f};
     list.gradient_rect(plate, 14.0f, gfx::mix(t.primary, Color::rgb(0xffffff), 0.15f),
                        gfx::mix(t.primary, t.page, 0.45f));
     const Color cut = gfx::mix(t.primary, t.page, 0.3f);
     list.circle(plate.cx() - 2.0f, plate.cy() + 1.0f, 15.0f, t.on_primary);
     list.circle(plate.cx() + 6.0f, plate.cy() - 5.0f, 13.0f, cut);
-    paint.heading("ProsperoLight", kMargin + 70.0f, 98.0f, 31.0f, paint.page_text());
+    paint.heading("Nightshade", kMargin + 70.0f, 90.0f, 30.0f, paint.page_text());
+    ui::text(list, canvas.fonts.semibold, "STREAM", kMargin + 71.0f, 110.0f, 15.0f, t.accent,
+             gfx::Align::left, 4.5f);
 
     // Tabs between the two shoulder buttons that turn them.
     const ui::GlyphStyle keys = glyphs(paint);
@@ -2260,7 +2264,7 @@ void View::draw_games(ui::Canvas &canvas, ui::Painter &paint) const
         {
             state.title = model_.reconnecting() ? i18n::tr("Reconnecting")
                                                 : i18n::tr("The PC is not answering");
-            state.body = i18n::tr("ProsperoLight keeps trying. Check that Sunshine is running "
+            state.body = i18n::tr("Nightshade Stream keeps trying. Check that Sunshine is running "
                                   "on the PC.");
             state.action = i18n::tr("Try again");
         }
@@ -2317,7 +2321,7 @@ void View::draw_settings(ui::Canvas &canvas, ui::Painter &paint) const
                kMargin + paint.heading_width(i18n::tr("Settings"), 52.0f) + 22.0f, 212.0f, 24.0f,
                paint.page_text_muted());
     if (!version_.empty())
-        paint.body(i18n::tr("ProsperoLight ") + version_, kRight, 212.0f, 21.0f,
+        paint.body(i18n::tr("Nightshade Stream ") + version_, kRight, 212.0f, 21.0f,
                    paint.page_text_muted(), gfx::Align::right);
     form_.draw(canvas);
 
@@ -2396,10 +2400,10 @@ void View::draw_about(ui::Canvas &canvas, ui::Painter &paint) const
     const ui::Theme &t = theme_;
     const ui::FontRef &regular = canvas.fonts.regular;
     const Color rule = t.text_muted.with_alpha(0.28f);
-    paint.heading(i18n::tr("About ProsperoLight"), kMargin - 2.0f, 212.0f, 52.0f,
+    paint.heading(i18n::tr("About Nightshade Stream"), kMargin - 2.0f, 212.0f, 52.0f,
                   paint.page_text());
     paint.body(i18n::tr("Credits and first steps"),
-               kMargin + paint.heading_width(i18n::tr("About ProsperoLight"), 52.0f) + 22.0f,
+               kMargin + paint.heading_width(i18n::tr("About Nightshade Stream"), 52.0f) + 22.0f,
                212.0f, 24.0f, paint.page_text_muted());
 
     credits_panel_.draw(canvas, kCreditsPanel);
@@ -2410,7 +2414,7 @@ void View::draw_about(ui::Canvas &canvas, ui::Painter &paint) const
     paint.heading(i18n::tr("Powered by Moonlight"), left.x, left.y + 72.0f, 38.0f);
     ui::paragraph(
         list, regular,
-        i18n::tr("ProsperoLight speaks the Moonlight protocol through moonlight-common-c. "
+        i18n::tr("Nightshade Stream speaks the Moonlight protocol through moonlight-common-c. "
                  "All "
                  "credit for it goes to the Moonlight developers and contributors."),
         left.x, left.y + 118.0f, 24.0f, left.w, 34.0f, t.text, 3);
@@ -2422,13 +2426,13 @@ void View::draw_about(ui::Canvas &canvas, ui::Painter &paint) const
                            "the whole PS5 "
                            "homebrew community, and to every developer whose tools and "
                            "libraries make "
-                           "ProsperoLight possible."),
+                           "Nightshade Stream possible."),
                   left.x, left.y + 326.0f, 24.0f, left.w, 34.0f, t.text, 3);
     list.rounded_rect({left.x, left.y + 426.0f, left.w, 1.0f}, 0.0f, rule);
     paint.label(ui::upper(i18n::tr("PS5 edition")), left.x, left.y + 462.0f, 19.0f, t.text_muted);
     ui::paragraph(list, regular,
-                  i18n::tr("ProsperoLight is an unofficial PS5 client brought to you by "
-                           "BlackBearReloaded."),
+                  i18n::tr("Nightshade Stream is Oliv3rmoon's release of ProsperoLight by "
+                           "BlackBearReloaded, a port of Moonlight."),
                   left.x, left.y + 496.0f, 22.0f, left.w, 30.0f, t.text, 2);
     ui::paragraph(list, regular,
                   i18n::tr("Thanks to ProsperoLight contributors: Nikita Dybov, Kris Escobar."),
@@ -2527,9 +2531,9 @@ void View::open_update_offer(ui::Feedback &feedback, bool on_notes)
     if (update_offer_.size != 0)
         std::snprintf(size, sizeof(size), " (%.0f MB)",
                       static_cast<double>(update_offer_.size) / 1e6);
-    content.body = std::string(i18n::tr("ProsperoLight ")) + update_offer_.version +
+    content.body = std::string(i18n::tr("Nightshade Stream ")) + update_offer_.version +
                    i18n::tr(" is out") + size +
-                   i18n::tr(".\nUpdate now downloads and checks it. ProsperoLight then closes "
+                   i18n::tr(".\nUpdate now downloads and checks it. Nightshade Stream then closes "
                             "while the new version is put in place.");
     content.buttons.push_back({i18n::tr("Skip")});
     if (with_notes)
@@ -2565,7 +2569,7 @@ void View::draw_update_notes(ui::Canvas &canvas) const
     const Rect panel = kNotesPanel;
     ui::draw_overlay_panel(canvas, t, panel, false, 0.6f);
     ui::Painter paint(list, canvas.fonts, t, canvas.glass);
-    paint.label(ui::upper(std::string(i18n::tr("ProsperoLight ")) + update_offer_.version),
+    paint.label(ui::upper(std::string(i18n::tr("Nightshade Stream ")) + update_offer_.version),
                 panel.x + 64.0f, panel.y + 62.0f, 20.0f, t.text_muted);
     paint.heading(i18n::tr("What's new"), panel.x + 64.0f, panel.y + 116.0f, 40.0f);
     update_notes_.draw(canvas);
@@ -2595,7 +2599,7 @@ void View::open_update_failure(const char *reason, ui::Feedback &feedback)
     content.icon = ui::StatusKind::danger;
     content.title = i18n::tr("The update was not installed");
     content.body = std::string(reason && reason[0] ? reason : i18n::tr("Something went wrong.")) +
-                   i18n::tr("\nProsperoLight is as it was.");
+                   i18n::tr("\nNightshade Stream is as it was.");
     content.buttons = {{i18n::tr("Close")}, {i18n::tr("Try again"), ui::ButtonKind::primary}};
     content.default_button = 1;
     update_dialog_.open(std::move(content), feedback);
@@ -2710,14 +2714,14 @@ void View::draw_update(ui::Canvas &canvas) const
                         : now.phase == UpdatePhase::ready || now.phase == UpdatePhase::applying
                             ? i18n::tr("Finishing")
                             : i18n::tr("Preparing");
-    paint.label(ui::upper(std::string(i18n::tr("ProsperoLight ")) + update_offer_.version),
+    paint.label(ui::upper(std::string(i18n::tr("Nightshade Stream ")) + update_offer_.version),
                 panel.cx(), panel.y + 62.0f, 20.0f, t.text_muted, gfx::Align::center);
     paint.heading(doing, panel.cx(), panel.y + 122.0f, 40.0f, gfx::Align::center);
     update_ring_.draw(canvas);
     char line[2048];
     std::snprintf(line, sizeof(line), "%s", i18n::tr("Starting the update helper"));
     if (closing)
-        std::snprintf(line, sizeof(line), "%s", i18n::tr("ProsperoLight closes now."));
+        std::snprintf(line, sizeof(line), "%s", i18n::tr("Nightshade Stream closes now."));
     else if (now.total != 0)
         std::snprintf(line, sizeof(line), i18n::tr("%.1f of %.1f MB%s%s"),
                       static_cast<double>(now.done) / 1e6, static_cast<double>(now.total) / 1e6,

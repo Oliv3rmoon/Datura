@@ -312,7 +312,7 @@ int main(int argc, char **argv)
                             "- Frame pacing: Unpaced, Paced and Paced+VRR.\n"
                             "- More of the DualSense reaches the game: adaptive triggers, "
                             "light bar, motion and touchpad contacts.\nUpdates\n"
-                            "- ProsperoLight installs new releases by itself.\n"
+                            "- Nightshade Stream installs new releases by itself.\n"
                             "Note: this release must be installed by hand; later ones "
                             "arrive through this dialog.\n"
                             "The decoder still limits the usable bitrate at 4K, as the "

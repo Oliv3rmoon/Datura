@@ -244,7 +244,7 @@ inline void refresh_keyboard_surface(uint8_t *surface, uint32_t selected, int sh
 
     memset(luma, 44, KEYBOARD_Y_BYTES);
     memset(surface + KEYBOARD_Y_BYTES, 128, KEYBOARD_UV_BYTES);
-    overlay_draw_text(luma, KEYBOARD_WIDTH, KEYBOARD_HEIGHT, "ProsperoLight keyboard", margin, 10u,
+    overlay_draw_text(luma, KEYBOARD_WIDTH, KEYBOARD_HEIGHT, "Nightshade Stream keyboard", margin, 10u,
                       text_luma);
     overlay_draw_text(luma, KEYBOARD_WIDTH, KEYBOARD_HEIGHT,
                       "Cross: type   Square: backspace   Triangle: shift   Options: enter   "

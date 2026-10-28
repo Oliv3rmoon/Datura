@@ -746,7 +746,7 @@ void Model::ApplyUpdate(bool available, const UpdateOffer &offer)
     }
     else if (available)
         Notify(NoticeKind::info, i18n::tr("Update available"),
-               std::string(i18n::tr("ProsperoLight ")) + offer.version +
+               std::string(i18n::tr("Nightshade Stream ")) + offer.version +
                    i18n::tr(" is out. Get it from GitHub."),
                kUpdateNoticeSeconds);
 }

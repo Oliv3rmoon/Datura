@@ -992,12 +992,15 @@ class ToolTests(unittest.TestCase):
         platform = (ROOT / "src/launcher/launcher_ps5.cpp").read_text(encoding="utf-8")
         self.assertCodeContains('tabs_.set_tabs({{"PCs"}, {"Games"}, {"Settings"}, {"About"}});', view)
         self.assertCodeContains("constexpr int kScreens = 4;", view)
-        # About gives credit, as ProsperoEden's page does, and names the folders.
+        # About gives credit, as ProsperoEden's page does, and names the folders. Nightshade
+        # Stream: whose release it is, of what and by whom.
         about = view[view.index("void View::draw_about(") : view.index("void View::draw_pairing(")]
         # C++ concatenates adjacent literals, including across formatted lines.
         about = re.sub(r'"\s*"', "", about)
         for text in ("Powered by Moonlight", "moonlight-stream.org", "Sunshine developers",
-                     "brought to you by BlackBearReloaded", "made with ElevenLabs",
+                     "Nightshade Stream is Oliv3rmoon's release of ProsperoLight by "
+                     "BlackBearReloaded, a port of Moonlight.",
+                     "Thanks to ProsperoLight contributors", "made with ElevenLabs",
                      '"Version " + version_', "files_.draw(canvas);"):
             self.assertCodeContains(text, about)
         self.assertIn("view.set_storage(StorageFolders());", platform)

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# Nightshade Stream - The update check against GitHub releases, built and run on the host.
+# Datura - The update check against GitHub releases, built and run on the host.
 # Copyright (C) 2026 Oliv3rmoon
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Builds tests/github_release_check.cc with the update kit's files it tests (update_check.c
 without its network side, github_release.c, self_update.c, self_update_sha256.c) under the
 address and undefined-behaviour sanitizers, warnings as errors, and runs it. CC and CXX name other
-compilers (default: clang, clang++). As Nightshade TV's tests/test_github_release.py."""
+compilers (default: clang, clang++). As Physalis's tests/test_github_release.py."""
 
 import os
 import shutil
@@ -42,11 +42,11 @@ class GitHubReleaseTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr[-3000:])
         self.assertIn("PASS", result.stdout)
 
-    def test_the_app_asks_nightshade_streams_repository(self):
+    def test_the_app_asks_datura_repository(self):
         launcher = (ROOT / "src/launcher/launcher_ps5.cpp").read_text(encoding="utf-8")
-        self.assertIn('constexpr const char *kUpdateRepository = "Oliv3rmoon/Nightshade-Stream";',
+        self.assertIn('constexpr const char *kUpdateRepository = "Oliv3rmoon/Datura";',
                       launcher)
-        self.assertIn('constexpr const char *kAppName = "Nightshade Stream";', launcher)
+        self.assertIn('constexpr const char *kAppName = "Datura";', launcher)
         # The catalog lists ProsperoLight's own releases: the app never asks it.
         self.assertNotIn("self_update_check(", launcher)
         self.assertNotIn("self_update_check_self(", launcher)
@@ -58,13 +58,13 @@ class GitHubReleaseTest(unittest.TestCase):
 
     def test_a_tag_publishes_the_release_the_app_offers(self):
         # A version tag builds PPSA99002.zip and publishes it with SHA256SUMS as the latest
-        # release under Nightshade Stream's name; the build cache is a pre-release that is never
+        # release under Datura's name; the build cache is a pre-release that is never
         # the latest, so releases/latest never names it.
         workflow = (ROOT / ".github/workflows/tooling.yml").read_text(encoding="utf-8")
-        self.assertIn('--title "Nightshade Stream $GITHUB_REF_NAME" "${release_flags[@]}"', workflow)
+        self.assertIn('--title "Datura $GITHUB_REF_NAME" "${release_flags[@]}"', workflow)
         self.assertIn("release_flags=(--latest)", workflow)
         self.assertIn('cp "docs/releases/$GITHUB_REF_NAME.md" release-notes.md', workflow)
-        self.assertIn("01.000.110|01.001.000)", workflow)
+        self.assertIn("01.001.000|01.001.001)", workflow)
         self.assertIn("No build-cache snapshot here; building without one.", workflow)
         cache = (ROOT / ".github/workflows/build-cache.yml").read_text(encoding="utf-8")
         self.assertIn("gh release create build-cache --repo \"$GITHUB_REPOSITORY\" --prerelease "

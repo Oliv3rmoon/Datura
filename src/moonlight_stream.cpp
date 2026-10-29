@@ -1854,10 +1854,9 @@ static int decode_access_unit(native_renderer_state_t *state, PDECODE_UNIT decod
                      hdr_transitions, decode_unit->colorspace, COLORSPACE_REC_2020);
             (void)lan_http_report_text(receipt);
             snprintf(hdr_notification.message, sizeof(hdr_notification.message),
-                     hdr_active
-                         ? "Nightshade Stream HDR stopped: Sunshine sent an unexpected color space."
-                         : "Nightshade Stream HDR unavailable: enable HDR on Sunshine's captured "
-                           "display and retry.");
+                     hdr_active ? "Datura HDR stopped: Sunshine sent an unexpected color space."
+                                : "Datura HDR unavailable: enable HDR on Sunshine's captured "
+                                  "display and retry.");
             (void)sceKernelSendNotificationRequest(0, &hdr_notification, sizeof(hdr_notification),
                                                    0);
         }
@@ -3578,7 +3577,7 @@ static void ps5_controller_set_mouse_mode(ps5_controller_state_t *state, int ena
         state->last_event_us = 0;
     }
     snprintf(notification.message, sizeof(notification.message),
-             "Nightshade Stream: %s mode enabled. Touchpad + Square switches to %s.",
+             "Datura: %s mode enabled. Touchpad + Square switches to %s.",
              state->mouse_mode ? "Mouse" : "Controller",
              state->mouse_mode ? "controller" : "mouse");
     (void)sceKernelSendNotificationRequest(0, &notification, sizeof(notification), 0);
@@ -3641,7 +3640,7 @@ static void ps5_controller_activate_keyboard_key(ps5_controller_state_t *state)
     if (result != 0)
     {
         snprintf(notification.message, sizeof(notification.message),
-                 "Nightshade Stream: Could not send keyboard input.");
+                 "Datura: Could not send keyboard input.");
         (void)sceKernelSendNotificationRequest(0, &notification, sizeof(notification), 0);
         (void)lan_http_report_text(notification.message);
     }
@@ -4139,9 +4138,8 @@ int moonlight_stream_run(const moonlight_stream_options_t *options,
         {
             *metrics = {};
             metrics->result = -5;
-            snprintf(
-                metrics->error, sizeof(metrics->error),
-                "GPU presentation timed out. Restart Nightshade Stream before streaming again.");
+            snprintf(metrics->error, sizeof(metrics->error),
+                     "GPU presentation timed out. Restart Datura before streaming again.");
         }
         return -5;
     }
@@ -4382,7 +4380,7 @@ int moonlight_stream_run(const moonlight_stream_options_t *options,
     if (result != 0)
     {
         snprintf(stream_error, sizeof(stream_error),
-                 "Local video decoder module failed to load (0x%08x). Restart Nightshade Stream.",
+                 "Local video decoder module failed to load (0x%08x). Restart Datura.",
                  (uint32_t)result);
         goto done;
     }
@@ -4727,7 +4725,7 @@ configure_stream:
             if (pads_changed & (1u << pad))
             {
                 snprintf(notification.message, sizeof(notification.message),
-                         "Nightshade Stream: Controller %u %s.", pad + 1u,
+                         "Datura: Controller %u %s.", pad + 1u,
                          (pads_before & (1u << pad)) ? "disconnected" : "connected");
                 (void)sceKernelSendNotificationRequest(0, &notification, sizeof(notification), 0);
                 (void)lan_http_report_text(notification.message);
@@ -5123,7 +5121,7 @@ done:
         presentation_faulted = true;
         result = source_idle_result ? source_idle_result : delete_result;
         snprintf(stream_error, sizeof(stream_error),
-                 "Video cleanup failed. Restart Nightshade Stream before streaming again.");
+                 "Video cleanup failed. Restart Datura before streaming again.");
     }
     snprintf(
         notification.message, sizeof(notification.message),
@@ -5133,8 +5131,7 @@ done:
     (void)lan_http_report_text(notification.message);
     if (stream_error[0])
     {
-        snprintf(notification.message, sizeof(notification.message), "Nightshade Stream: %s",
-                 stream_error);
+        snprintf(notification.message, sizeof(notification.message), "Datura: %s", stream_error);
         (void)sceKernelSendNotificationRequest(0, &notification, sizeof(notification), 0);
     }
     if (metrics)

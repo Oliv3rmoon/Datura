@@ -1,5 +1,5 @@
 # ps5-native-app-boilerplate - ProsperoLight lint, test, build, and release validation.
-# Nightshade Stream (Oliv3rmoon/Nightshade-Stream): a version tag pushed to that repository builds
+# Datura (Oliv3rmoon/Datura): a version tag pushed to that repository builds
 # PPSA99002.zip and publishes it, with SHA256SUMS, as the latest release, which the app's update
 # check then offers (third_party/update-check/github_release.h).
 # Copyright (C) 2026 BlackBearReloaded
@@ -158,11 +158,12 @@ jobs:
       # The app folder is the only output; no image is built, here or by a local target.
       - name: Build the release folder
         run: |
-          # Validated streaming releases retain the measured build settings. Nightshade Stream
-          # 01.001.000 is built as ProsperoLight 01.000.110 was; a later release is added here
-          # once it has been measured too.
+          # Validated streaming releases retain the measured build settings. Datura
+          # 01.001.000 is built as ProsperoLight 01.000.110 was, and 01.001.001, the same code
+          # under its new name, as 01.001.000 was; a later release is added here once it has
+          # been measured too.
           case "$CONTENT_VERSION" in
-            01.000.062|01.000.070|01.000.080|01.000.090|01.000.095|01.000.100|01.000.110|01.001.000)
+            01.000.062|01.000.070|01.000.080|01.000.090|01.000.095|01.000.100|01.000.110|01.001.000|01.001.001)
               make app FEC_SIMD=1 OPUS_SIMD=1 PERFORMANCE_DETAIL=1 FLIP_POLL_US=200 INPUT_POLL_US=2000 VIDEO_SLICES_PER_FRAME=8
               ;;
             *)
@@ -284,7 +285,7 @@ jobs:
           echo "archive=${archives[0]#./}" >> "$GITHUB_OUTPUT"
           echo "checksum=${checksums[0]#./}" >> "$GITHUB_OUTPUT"
 
-      # Nightshade Stream: docs/releases/<tag>.md is the release's page when there is one;
+      # Datura: docs/releases/<tag>.md is the release's page when there is one;
       # otherwise the tag's section of CHANGELOG.md, as ProsperoLight's releases had.
       - name: Prepare release notes
         shell: bash
@@ -337,5 +338,5 @@ jobs:
               --repo "$GITHUB_REPOSITORY" \
               --verify-tag \
               --notes-file release-notes.md \
-              --title "Nightshade Stream $GITHUB_REF_NAME" "${release_flags[@]}"
+              --title "Datura $GITHUB_REF_NAME" "${release_flags[@]}"
           fi

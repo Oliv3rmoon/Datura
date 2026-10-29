@@ -306,9 +306,9 @@ void CaptureConnecting(gfx::Renderer &renderer, View &view, Frame &frame, Select
            static_cast<long long>((sys::monotonic_us() - started) / 1000));
 }
 
-// Updates (third_party/update-check). Nightshade Stream: once per launch the
+// Updates (third_party/update-check). Datura: once per launch the
 // worker asks GitHub for the newest release of kUpdateRepository
-// (Oliv3rmoon/Nightshade-Stream; github_release.h), not the homebrew.page
+// (Oliv3rmoon/Datura; github_release.h), not the homebrew.page
 // catalog, which lists ProsperoLight's own releases: a release that is no
 // draft or pre-release, tagged with a content version higher than this one,
 // carrying PPSA99002.zip and the SHA256SUMS that gives its SHA-256. When the
@@ -322,8 +322,8 @@ void CaptureConnecting(gfx::Renderer &renderer, View &view, Frame &frame, Select
 // The repository whose releases are offered, and the name the helper's
 // notification gives the app. ProsperoLight's own repositories are refused:
 // an update from them would undo the name, the look and this update source.
-constexpr const char *kUpdateRepository = "Oliv3rmoon/Nightshade-Stream";
-constexpr const char *kAppName = "Nightshade Stream";
+constexpr const char *kUpdateRepository = "Oliv3rmoon/Datura";
+constexpr const char *kAppName = "Datura";
 
 constexpr bool SameRepository(const char *a, const char *b)
 {
@@ -342,7 +342,7 @@ constexpr bool ProsperoLightRepository(const char *repository)
            SameRepository(repository, "ledybacer/prosperolight");
 }
 static_assert(!ProsperoLightRepository(kUpdateRepository),
-              "updates come from Nightshade Stream's releases, never ProsperoLight's");
+              "updates come from Datura's releases, never ProsperoLight's");
 static_assert(ProsperoLightRepository("BlackBearReloaded/ProsperoLight") &&
               ProsperoLightRepository("LedyBacer/ProsperoLight"));
 

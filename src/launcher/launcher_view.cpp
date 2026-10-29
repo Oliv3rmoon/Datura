@@ -170,10 +170,10 @@ ui::KeyboardLayout address_layout()
     return layout;
 }
 
-// Nightshade Stream's mark, as tools/render-home-art.py draws it for the icon: Nightshade's flower
+// Datura's mark, as tools/render-home-art.py draws it for the icon: Nightshade's flower
 // (five red petals round a pale star, in a red light) with the stream going out of it, three arcs
 // of light to its upper right. A petal is a narrow base, a round middle and a pointed tip, each
-// turned to its place, with a vein along it (Nightshade TV's draw_mark).
+// turned to its place, with a vein along it (Physalis's draw_mark).
 void draw_mark(gfx::DrawList &list, float cx, float cy, float size, const ui::Theme &theme)
 {
     const Color red = theme.accent;
@@ -219,8 +219,8 @@ void draw_mark(gfx::DrawList &list, float cx, float cy, float size, const ui::Th
 
 ui::Theme moonlight_theme()
 {
-    // Nightshade Stream: Nightshade's own palette (its "nightly" theme, Oliv3rmoon/Nightshade
-    // headless/prosperoeden/pe/ui/theme.cpp), as Nightshade TV has it: near-black pages, black
+    // Datura: Nightshade's own palette (its "nightly" theme, Oliv3rmoon/Nightshade
+    // headless/prosperoeden/pe/ui/theme.cpp), as Physalis has it: near-black pages, black
     // glass panels, a red accent for the main actions, the focus and the selections, cool white
     // text, an amber that is never the accent for warnings, and a near-black sky with a low red
     // glow. The kit's Acrylic theme is still the recipe (glass surfaces, hairlines of light).
@@ -2037,12 +2037,12 @@ void View::draw_header(ui::Canvas &canvas, ui::Painter &paint) const
     gfx::DrawList &list = canvas.list;
     const ui::Theme &t = theme_;
     // The mark, Nightshade's flower with the stream going out of it, then the name: a wordmark,
-    // "Nightshade" with STREAM under it in the accent, so the whole name keeps clear of the L1
+    // "Datura" with NIGHTSHADE under it in the accent, so the whole name keeps clear of the L1
     // hint before the tabs.
     const Rect plate{kMargin, 62.0f, 52.0f, 52.0f};
     draw_mark(list, plate.cx(), plate.cy(), 56.0f, t);
-    paint.heading("Nightshade", kMargin + 70.0f, 90.0f, 30.0f, paint.page_text());
-    ui::text(list, canvas.fonts.semibold, "STREAM", kMargin + 71.0f, 110.0f, 15.0f, t.accent,
+    paint.heading("Datura", kMargin + 70.0f, 90.0f, 30.0f, paint.page_text());
+    ui::text(list, canvas.fonts.semibold, "NIGHTSHADE", kMargin + 71.0f, 110.0f, 15.0f, t.accent,
              gfx::Align::left, 4.5f);
 
     // Tabs between the two shoulder buttons that turn them.
@@ -2328,7 +2328,7 @@ void View::draw_games(ui::Canvas &canvas, ui::Painter &paint) const
         {
             state.title = model_.reconnecting() ? i18n::tr("Reconnecting")
                                                 : i18n::tr("The PC is not answering");
-            state.body = i18n::tr("Nightshade Stream keeps trying. Check that Sunshine is running "
+            state.body = i18n::tr("Datura keeps trying. Check that Sunshine is running "
                                   "on the PC.");
             state.action = i18n::tr("Try again");
         }
@@ -2385,8 +2385,8 @@ void View::draw_settings(ui::Canvas &canvas, ui::Painter &paint) const
                kMargin + paint.heading_width(i18n::tr("Settings"), 52.0f) + 22.0f, 212.0f, 24.0f,
                paint.page_text_muted());
     if (!version_.empty())
-        paint.body(i18n::tr("Nightshade Stream ") + version_, kRight, 212.0f, 21.0f,
-                   paint.page_text_muted(), gfx::Align::right);
+        paint.body(i18n::tr("Datura ") + version_, kRight, 212.0f, 21.0f, paint.page_text_muted(),
+                   gfx::Align::right);
     form_.draw(canvas);
 
     list.push_clip(kProfilePanel);
@@ -2464,11 +2464,10 @@ void View::draw_about(ui::Canvas &canvas, ui::Painter &paint) const
     const ui::Theme &t = theme_;
     const ui::FontRef &regular = canvas.fonts.regular;
     const Color rule = t.text_muted.with_alpha(0.28f);
-    paint.heading(i18n::tr("About Nightshade Stream"), kMargin - 2.0f, 212.0f, 52.0f,
-                  paint.page_text());
+    paint.heading(i18n::tr("About Datura"), kMargin - 2.0f, 212.0f, 52.0f, paint.page_text());
     paint.body(i18n::tr("Credits and first steps"),
-               kMargin + paint.heading_width(i18n::tr("About Nightshade Stream"), 52.0f) + 22.0f,
-               212.0f, 24.0f, paint.page_text_muted());
+               kMargin + paint.heading_width(i18n::tr("About Datura"), 52.0f) + 22.0f, 212.0f,
+               24.0f, paint.page_text_muted());
 
     credits_panel_.draw(canvas, kCreditsPanel);
     const Rect left = credits_panel_.content_rect(kCreditsPanel).inset(14.0f);
@@ -2476,12 +2475,11 @@ void View::draw_about(ui::Canvas &canvas, ui::Painter &paint) const
     paint.label(ui::upper(i18n::tr("Project credits")), left.x, left.y + 20.0f, 19.0f,
                 t.text_muted);
     paint.heading(i18n::tr("Powered by Moonlight"), left.x, left.y + 72.0f, 38.0f);
-    ui::paragraph(
-        list, regular,
-        i18n::tr("Nightshade Stream speaks the Moonlight protocol through moonlight-common-c. "
-                 "All "
-                 "credit for it goes to the Moonlight developers and contributors."),
-        left.x, left.y + 118.0f, 24.0f, left.w, 34.0f, t.text, 3);
+    ui::paragraph(list, regular,
+                  i18n::tr("Datura speaks the Moonlight protocol through moonlight-common-c. "
+                           "All "
+                           "credit for it goes to the Moonlight developers and contributors."),
+                  left.x, left.y + 118.0f, 24.0f, left.w, 34.0f, t.text, 3);
     paint.label("moonlight-stream.org", left.x, left.y + 226.0f, 24.0f, t.primary);
     list.rounded_rect({left.x, left.y + 252.0f, left.w, 1.0f}, 0.0f, rule);
     paint.label(ui::upper(i18n::tr("Thanks")), left.x, left.y + 288.0f, 19.0f, t.text_muted);
@@ -2490,12 +2488,12 @@ void View::draw_about(ui::Canvas &canvas, ui::Painter &paint) const
                            "the whole PS5 "
                            "homebrew community, and to every developer whose tools and "
                            "libraries make "
-                           "Nightshade Stream possible."),
+                           "Datura possible."),
                   left.x, left.y + 326.0f, 24.0f, left.w, 34.0f, t.text, 3);
     list.rounded_rect({left.x, left.y + 426.0f, left.w, 1.0f}, 0.0f, rule);
     paint.label(ui::upper(i18n::tr("PS5 edition")), left.x, left.y + 462.0f, 19.0f, t.text_muted);
     ui::paragraph(list, regular,
-                  i18n::tr("Nightshade Stream is Oliv3rmoon's release of ProsperoLight by "
+                  i18n::tr("Datura is Oliv3rmoon's release of ProsperoLight by "
                            "BlackBearReloaded, a port of Moonlight."),
                   left.x, left.y + 496.0f, 22.0f, left.w, 30.0f, t.text, 2);
     ui::paragraph(list, regular,
@@ -2595,9 +2593,9 @@ void View::open_update_offer(ui::Feedback &feedback, bool on_notes)
     if (update_offer_.size != 0)
         std::snprintf(size, sizeof(size), " (%.0f MB)",
                       static_cast<double>(update_offer_.size) / 1e6);
-    content.body = std::string(i18n::tr("Nightshade Stream ")) + update_offer_.version +
-                   i18n::tr(" is out") + size +
-                   i18n::tr(".\nUpdate now downloads and checks it. Nightshade Stream then closes "
+    content.body = std::string(i18n::tr("Datura ")) + update_offer_.version + i18n::tr(" is out") +
+                   size +
+                   i18n::tr(".\nUpdate now downloads and checks it. Datura then closes "
                             "while the new version is put in place.");
     content.buttons.push_back({i18n::tr("Skip")});
     if (with_notes)
@@ -2633,7 +2631,7 @@ void View::draw_update_notes(ui::Canvas &canvas) const
     const Rect panel = kNotesPanel;
     ui::draw_overlay_panel(canvas, t, panel, false, 0.6f);
     ui::Painter paint(list, canvas.fonts, t, canvas.glass);
-    paint.label(ui::upper(std::string(i18n::tr("Nightshade Stream ")) + update_offer_.version),
+    paint.label(ui::upper(std::string(i18n::tr("Datura ")) + update_offer_.version),
                 panel.x + 64.0f, panel.y + 62.0f, 20.0f, t.text_muted);
     paint.heading(i18n::tr("What's new"), panel.x + 64.0f, panel.y + 116.0f, 40.0f);
     update_notes_.draw(canvas);
@@ -2663,7 +2661,7 @@ void View::open_update_failure(const char *reason, ui::Feedback &feedback)
     content.icon = ui::StatusKind::danger;
     content.title = i18n::tr("The update was not installed");
     content.body = std::string(reason && reason[0] ? reason : i18n::tr("Something went wrong.")) +
-                   i18n::tr("\nNightshade Stream is as it was.");
+                   i18n::tr("\nDatura is as it was.");
     content.buttons = {{i18n::tr("Close")}, {i18n::tr("Try again"), ui::ButtonKind::primary}};
     content.default_button = 1;
     update_dialog_.open(std::move(content), feedback);
@@ -2778,14 +2776,14 @@ void View::draw_update(ui::Canvas &canvas) const
                         : now.phase == UpdatePhase::ready || now.phase == UpdatePhase::applying
                             ? i18n::tr("Finishing")
                             : i18n::tr("Preparing");
-    paint.label(ui::upper(std::string(i18n::tr("Nightshade Stream ")) + update_offer_.version),
-                panel.cx(), panel.y + 62.0f, 20.0f, t.text_muted, gfx::Align::center);
+    paint.label(ui::upper(std::string(i18n::tr("Datura ")) + update_offer_.version), panel.cx(),
+                panel.y + 62.0f, 20.0f, t.text_muted, gfx::Align::center);
     paint.heading(doing, panel.cx(), panel.y + 122.0f, 40.0f, gfx::Align::center);
     update_ring_.draw(canvas);
     char line[2048];
     std::snprintf(line, sizeof(line), "%s", i18n::tr("Starting the update helper"));
     if (closing)
-        std::snprintf(line, sizeof(line), "%s", i18n::tr("Nightshade Stream closes now."));
+        std::snprintf(line, sizeof(line), "%s", i18n::tr("Datura closes now."));
     else if (now.total != 0)
         std::snprintf(line, sizeof(line), i18n::tr("%.1f of %.1f MB%s%s"),
                       static_cast<double>(now.done) / 1e6, static_cast<double>(now.total) / 1e6,

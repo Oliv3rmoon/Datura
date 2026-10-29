@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 name: "Feature request"
-description: "An idea or improvement for Nightshade Stream"
+description: "An idea or improvement for Datura"
 title: "[Feature] "
 labels: ["enhancement"]
 body:

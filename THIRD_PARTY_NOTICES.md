@@ -20,11 +20,11 @@ ProsperoLight exists thanks to the maintainers and contributors of:
 The original ProsperoLight artwork and selection music are distributed under
 the project license.
 
-In Nightshade Stream, Oliv3rmoon's release of ProsperoLight, the icon and the
+In Datura, Oliv3rmoon's release of ProsperoLight, the icon and the
 home-screen pictures (`sce_sys/icon0.png`, `pic0.dds` and `pic1.dds` with their
 PNGs and source PNGs) take the place of ProsperoLight's artwork; the selection
 music is ProsperoLight's. They are drawn by `tools/render-home-art.py`, after
-Nightshade TV's and Nightshade's (Oliv3rmoon/Nightshade), Copyright (C) 2026
+Physalis's and Nightshade's (Oliv3rmoon/Nightshade), Copyright (C) 2026
 Oliv3rmoon, and distributed under GPL-3.0-or-later.
 
 ## Native build dependencies
@@ -113,8 +113,8 @@ self-update engine and its helper of
 (`examples/update-check`, `examples/self-update`, `examples/self-update-helper`),
 Copyright (C) 2026 BlackBearReloaded, GPL-3.0-or-later. The helper reads ZIP archives with
 [miniz](https://github.com/richgel999/miniz) (`third_party/miniz`, MIT; its licence is
-`third_party/licenses/miniz.txt` and ships with the app). In Nightshade Stream it asks
-GitHub for the releases of Oliv3rmoon/Nightshade-Stream (`github_release.{h,c}`, Copyright (C)
+`third_party/licenses/miniz.txt` and ships with the app). In Datura it asks
+GitHub for the releases of Oliv3rmoon/Datura (`github_release.{h,c}`, Copyright (C)
 2026 Oliv3rmoon, GPL-3.0-or-later, after Nightshade's) instead of the homebrew.page catalog,
 through libcurl, which the build takes from the pinned PacBrew release
 v0.40.2 and links statically with its dependencies. Their licence texts are in

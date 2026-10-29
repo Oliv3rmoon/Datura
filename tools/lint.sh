@@ -34,8 +34,8 @@ for file in "${repository_files[@]}"; do
                     continue
                     ;;
             esac
-            # Nightshade Stream: Oliv3rmoon's own files name him and Nightshade Stream.
-            grep -Eq 'ps5-native-app-boilerplate|Nightshade Stream' <<<"$header"
+            # Datura: Oliv3rmoon's own files name him and Datura.
+            grep -Eq 'ps5-native-app-boilerplate|Datura' <<<"$header"
             grep -Eq 'Copyright \(C\) 2026 (BlackBearReloaded|Oliv3rmoon)' <<<"$header"
             grep -Fq 'SPDX-License-Identifier: GPL-3.0-or-later' <<<"$header"
             ((checked += 1))

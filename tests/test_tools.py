@@ -998,7 +998,7 @@ class ToolTests(unittest.TestCase):
         # C++ concatenates adjacent literals, including across formatted lines.
         about = re.sub(r'"\s*"', "", about)
         for text in ("Powered by Moonlight", "moonlight-stream.org", "Sunshine developers",
-                     "Nightshade Stream is Oliv3rmoon's release of ProsperoLight by "
+                     "Datura is Oliv3rmoon's release of ProsperoLight by "
                      "BlackBearReloaded, a port of Moonlight.",
                      "Thanks to ProsperoLight contributors", "made with ElevenLabs",
                      '"Version " + version_', "files_.draw(canvas);"):

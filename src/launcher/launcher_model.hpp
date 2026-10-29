@@ -79,7 +79,7 @@ enum class Busy
 // and settings, Sunshine's state, pairing, and the requests that reach the
 // network. Requests run one at a time on a worker thread, so the screen keeps
 // moving while a PC is slow to answer; Poll() applies what they return.
-// A newer release of Nightshade Stream on GitHub
+// A newer release of Datura on GitHub
 // (third_party/update-check/github_release.h, self_update.h).
 struct UpdateOffer
 {

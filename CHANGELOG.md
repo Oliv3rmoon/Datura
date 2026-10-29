@@ -1,8 +1,28 @@
 # Changelog
 
-What changed in each release of Nightshade Stream, newest first. A release's notes on GitHub are in
-`docs/releases/<version>.md`. What changed in ProsperoLight before Nightshade Stream follows, from
-01.000.110 down.
+What changed in each release of Datura, newest first. Datura was called Nightshade Stream until
+01.001.000, and the entries for those releases keep the name they had. A release's notes on GitHub
+are in `docs/releases/<version>.md`. What changed in ProsperoLight before Nightshade Stream
+follows, from 01.000.110 down.
+
+## Datura v1.001.001: renamed from Nightshade Stream
+
+Renamed to Datura; same app, same title ID, your settings stay. Datura, a Nightshade app, is the
+night-blooming flower of the nightshade family, for Moonlight streaming. What changed:
+
+- **The name.** The PS5 home screen, the header (a wordmark, "Datura" with NIGHTSHADE under it),
+  the About page, the version on the Settings page, the update dialog and its notices, the
+  stream's notifications and errors, and the on-screen keyboard say Datura, in all 31 languages.
+- **Updates.** The app now asks [Oliv3rmoon/Datura](https://github.com/Oliv3rmoon/Datura/releases)
+  for a newer release. The old address, Oliv3rmoon/Nightshade-Stream, forwards there, so
+  Nightshade Stream 01.001.000 finds this release and **Update now** installs it over itself. The
+  release's files are named as before: `PPSA99002.zip` and `SHA256SUMS`.
+- **Release builds.** 01.001.001 is built with the same measured settings as 01.001.000, which
+  ProsperoLight 01.000.110's were: the code is the same, only its name differs.
+- **What stays.** The title ID (PPSA99002) and the data folder (`/data/prosperolight`), so it
+  installs over Nightshade Stream and keeps your PCs, pairing, settings and forwarder list. Logs
+  and crash reports keep their names. The Nightshade look, the art and the credits to
+  ProsperoLight, Moonlight and Sunshine and their contributors are as they were.
 
 ## Nightshade Stream v1.001.000: the first Nightshade Stream, based on ProsperoLight 01.000.110
 

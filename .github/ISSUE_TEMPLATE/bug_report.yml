@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 name: "Bug report"
-description: "Something in Nightshade Stream does not work as it should"
+description: "Something in Datura does not work as it should"
 title: "[Bug] "
 labels: ["bug"]
 body:
@@ -61,7 +61,7 @@ body:
       label: "How did you install it?"
       options:
         - "Update in the app"
-        - "GitHub release ZIP (Oliv3rmoon/Nightshade-Stream)"
+        - "GitHub release ZIP (Oliv3rmoon/Datura)"
         - "Manual copy (USB or FTP)"
         - "Built from source"
     validations:

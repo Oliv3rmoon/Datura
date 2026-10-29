@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-# Nightshade Stream - Draw the home-screen pictures: the icon, the background and the launch picture.
+# Datura - Draw the home-screen pictures: the icon, the background and the launch picture.
 # Copyright (C) 2026 Oliv3rmoon
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Draw Nightshade Stream's home-screen pictures in Nightshade's style.
+"""Draw Datura's home-screen pictures in Nightshade's style.
 
 usage: python3 tools/render-home-art.py              (needs Pillow and NumPy)
        python3 tools/render-home-art.py --preview DIR  (small copies in DIR; the repository is left alone)
 
-Nightshade TV's tools/render-home-art.py (after Nightshade's, Oliv3rmoon/Nightshade), with a
+Physalis's tools/render-home-art.py (after Nightshade's, Oliv3rmoon/Nightshade), with a
 controller and the stream in place of the television: the same nightshade flower (five red petals
 round a pale cone), black berries and dark leaves, on near black with a red glow and faint stars,
 and Nightshade's palette (its "nightly" theme). The mark is the flower with the stream going out of
@@ -216,7 +216,7 @@ def berries(image, x, y, r):
     for dx, dy, s in ((0, 0, 1.0), (1.55, 0.55, 0.86), (0.55, 1.6, 0.8)):
         berry(image, x + dx * r, y + dy * r, r * s)
 
-# ---- From Nightshade TV: shapes and light along an edge -----------------------------------------
+# ---- From Physalis: shapes and light along an edge -----------------------------------------
 
 
 def fill(box, top, bottom):
@@ -243,7 +243,7 @@ def rim(image, box, mask, light, strength, shift):
     image[box[1]:box[3], box[0]:box[2]] += edge[..., None] * rgb(light) * strength
 
 
-# ---- Nightshade Stream's own: the controller, the stream, the moon ----------------------------
+# ---- Datura's own: the controller, the stream, the moon ----------------------------
 
 
 def polygon_mask(shapes, box, scale=4):

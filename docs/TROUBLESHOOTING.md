@@ -278,7 +278,7 @@ If **Decoder pipeline** is Adaptive or **Decoder CPU cores** is 4 or 5, open
 Settings and return them to Classic and 3: those are the defaults and the
 `01.000.062` decoder configuration. If V-Sync is Off, tearing is expected; turn
 it On. Freezes about once a second at a high bitrate are the decoder's limit:
-see [Bitrate limits](../README.md#bitrate-limits). Report which setting made
+see [Bitrate limits](PERFORMANCE_GUIDE.md#native-hevc-bitrate-limits). Report which setting made
 the difference together with `performance-last.json` or the klog summary.
 
 ## PyroWave profiles and local shortcuts
@@ -290,7 +290,7 @@ limits do not describe the PyroWave GPU decoder. See [PyroWave](PYROWAVE.md).
 
 Hold the Touchpad down until it clicks, then press L3 for the host's Back button
 or R3 for Guide. The console keeps its own Create and PS buttons. Settings shows
-all six shortcuts beside the list. See [controls](../README.md#controls) and [DualSense](DUALSENSE.md).
+all six shortcuts beside the list. See [controls](USER_GUIDE.md#controls) and [DualSense](DUALSENSE.md).
 
 For frame pacing comparison, enable diagnostic logs and collect a bounded
 capture for each mode; [the plotting tool](frame-pacing-measurements.md) shows

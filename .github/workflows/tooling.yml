@@ -160,10 +160,12 @@ jobs:
         run: |
           # Validated streaming releases retain the measured build settings. Datura
           # 01.001.000 is built as ProsperoLight 01.000.110 was, and 01.001.001, the same code
-          # under its new name, as 01.001.000 was; a later release is added here once it has
+          # under its new name, as 01.001.000 was. 01.001.002 adds the launcher's community
+          # card and About section, and its streaming code is 01.001.001's: it is built as that
+          # was, on that measurement, not a new one. A later release is added here once it has
           # been measured too.
           case "$CONTENT_VERSION" in
-            01.000.062|01.000.070|01.000.080|01.000.090|01.000.095|01.000.100|01.000.110|01.001.000|01.001.001)
+            01.000.062|01.000.070|01.000.080|01.000.090|01.000.095|01.000.100|01.000.110|01.001.000|01.001.001|01.001.002)
               make app FEC_SIMD=1 OPUS_SIMD=1 PERFORMANCE_DETAIL=1 FLIP_POLL_US=200 INPUT_POLL_US=2000 VIDEO_SLICES_PER_FRAME=8
               ;;
             *)

@@ -20,7 +20,7 @@
   <a href="https://buymeacoffee.com/oliv3rmoon"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-0d0d0f?style=for-the-badge&logo=buymeacoffee&logoColor=e5484d" alt="Buy me a coffee"></a>
 </p>
 
-Datura is a native game-streaming client for the PS5, and a Nightshade app by **[Oliv3rmoon](https://github.com/Oliv3rmoon)**: run Sunshine on your PC, pair once, and play your games and your desktop on the console. The current release is **01.001.001**, a full release; what changed is in the [changelog](CHANGELOG.md).
+Datura is a native game-streaming client for the PS5, and a Nightshade app by **[Oliv3rmoon](https://github.com/Oliv3rmoon)**: run Sunshine on your PC, pair once, and play your games and your desktop on the console. The current release is **01.001.002**, a full release; what changed is in the [changelog](CHANGELOG.md).
 
 ## Why Datura
 

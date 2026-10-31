@@ -5,6 +5,18 @@ What changed in each release of Datura, newest first. Datura was called Nightsha
 are in `docs/releases/<version>.md`. What changed in ProsperoLight before Nightshade Stream
 follows, from 01.000.110 down.
 
+## Datura v1.001.002: the community in About
+
+Where to find other Datura players, from the app. What changed:
+
+- **The community in About.** About now names the community's Discord server, **nightly**, with
+  its address (`discord.gg/pSqgRU3YP9`) and a QR code your phone opens it with; **Cross** there
+  shows the code larger. The first time Datura starts with this version, a card shows the same
+  once, after any update offer; any button closes it, and it doesn't come back. In all 31
+  languages.
+- **Release builds.** 01.001.002 is built with the same measured settings as 01.001.001: its
+  streaming code is the same.
+
 ## Datura v1.001.001: renamed from Nightshade Stream
 
 Renamed to Datura; same app, same title ID, your settings stay. Datura, a Nightshade app, is the

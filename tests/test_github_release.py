@@ -64,7 +64,7 @@ class GitHubReleaseTest(unittest.TestCase):
         self.assertIn('--title "Datura $GITHUB_REF_NAME" "${release_flags[@]}"', workflow)
         self.assertIn("release_flags=(--latest)", workflow)
         self.assertIn('cp "docs/releases/$GITHUB_REF_NAME.md" release-notes.md', workflow)
-        self.assertIn("01.001.000|01.001.001)", workflow)
+        self.assertIn("01.001.001|01.001.002)", workflow)
         self.assertIn("No build-cache snapshot here; building without one.", workflow)
         cache = (ROOT / ".github/workflows/build-cache.yml").read_text(encoding="utf-8")
         self.assertIn("gh release create build-cache --repo \"$GITHUB_REPOSITORY\" --prerelease "

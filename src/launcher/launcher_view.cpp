@@ -9,6 +9,8 @@
 
 #include "host_quit_preferences.hpp"
 #include "client_preferences.hpp"
+#include "community.hpp"
+#include "launcher/community_code.hpp"
 #include "host_preferences.hpp"
 #include "lan_http_report.hpp"
 #include "presentation_preferences.hpp"
@@ -49,6 +51,9 @@ constexpr std::size_t kPostersKept = 70;
 constexpr Rect kPairPanel{960.0f - 440.0f, 250.0f, 880.0f, 560.0f};
 constexpr Rect kUpdatePanel{960.0f - 440.0f, 230.0f, 880.0f, 600.0f};
 constexpr Rect kNotesPanel{960.0f - 560.0f, 120.0f, 1120.0f, 840.0f};
+// The community's card, and how long the launcher has been quiet before it comes (seconds).
+constexpr Rect kCommunityPanel{960.0f - 520.0f, 200.0f, 1040.0f, 660.0f};
+constexpr float kCommunityAfter = 1.2f;
 constexpr int kColumns = 7;
 // The stream opens the television's output for itself, often in another mode:
 // the launcher fades to black first, and the stream shows the connecting
@@ -107,6 +112,31 @@ constexpr float kBitrateStep = 10.0f;
 constexpr float kBitrateMax = 300.0f;
 // PyroWave works in the hundreds of Mbps: the slider reaches further for it.
 constexpr float kPyroWaveBitrateMax = 1000.0f;
+
+// A label in capitals where the kit can make them: ui::upper knows a to z, so a label with other
+// letters keeps the case it was written in.
+std::string label_case(const char *text)
+{
+    for (const char *c = text; *c != '\0'; ++c)
+        if (static_cast<unsigned char>(*c) >= 0x80)
+            return text;
+    return ui::upper(text);
+}
+
+// A QR code, black on white with four modules of quiet zone, `cell` pixels a module.
+void draw_qr(gfx::DrawList &list, const QrCode &code, float x, float y, float cell)
+{
+    if (code.size <= 0)
+        return;
+    const float side = cell * static_cast<float>(code.size + 8);
+    list.rounded_rect({x, y, side, side}, 0.0f, Color::rgb(0xffffff));
+    for (int row = 0; row < code.size; ++row)
+        for (int column = 0; column < code.size; ++column)
+            if (code.dark(column, row))
+                list.rounded_rect({x + static_cast<float>(column + 4) * cell,
+                                   y + static_cast<float>(row + 4) * cell, cell, cell},
+                                  0.0f, Color::rgb(0x000000));
+}
 
 ui::Theme theme_by_id(const char *id)
 {
@@ -1417,7 +1447,7 @@ void View::update(const InputFrame &input, float dt, ui::Feedback &feedback)
     UpdateOffer offered;
     if (update_ui_ == UpdateUi::hidden && !launching_ && !pairing && age_ > 0.8f &&
         !host_prompt_.is_open() && !port_prompt_.is_open() && !unpair_dialog_.is_open() &&
-        model_.TakeUpdateOffer(&offered))
+        !community_open_ && model_.TakeUpdateOffer(&offered))
     {
         update_offer_ = offered;
         // The notes as an article: list items, callouts, headings and text.
@@ -1454,9 +1484,31 @@ void View::update(const InputFrame &input, float dt, ui::Feedback &feedback)
         open_update_offer(feedback, false);
     }
 
+    // The community, once: when the launcher has been quiet a moment.
+    if (community_due_)
+    {
+        const bool quiet = update_ui_ == UpdateUi::hidden && !launching_ && !forwarding_ &&
+                           !pairing && !host_prompt_.is_open() && !port_prompt_.is_open() &&
+                           !unpair_dialog_.is_open() && !language_.is_open();
+        community_wait_ = quiet ? community_wait_ + dt : 0.0f;
+        if (community_wait_ >= kCommunityAfter)
+        {
+            community_due_ = false;
+            community_open_ = true;
+            feedback.play(audio::Cue::modal_open);
+            prosperolight_debug_line("community", "card shown");
+        }
+    }
+
     if (update_ui_ != UpdateUi::hidden)
     {
         update_modal(input, dt, feedback);
+    }
+    else if (community_open_)
+    {
+        // Any button closes it.
+        if (input.pressed != 0)
+            close_community(feedback);
     }
     else if (launching_)
     {
@@ -1552,6 +1604,12 @@ void View::update(const InputFrame &input, float dt, ui::Feedback &feedback)
     {
         update_settings(input, feedback);
     }
+    else if (screen_ == 3 && input.is_pressed(Action::confirm))
+    {
+        // About: the community's card, with its larger code.
+        community_open_ = true;
+        feedback.play(audio::Cue::modal_open);
+    }
     request_artwork();
 
     layout_actions();
@@ -1595,6 +1653,8 @@ void View::update(const InputFrame &input, float dt, ui::Feedback &feedback)
     toasts_.update(dt, feedback);
     pair_fade_.target = pairing ? 1.0f : 0.0f;
     pair_fade_.update(dt, 14.0f);
+    community_fade_.target = community_open_ ? 1.0f : 0.0f;
+    community_fade_.update(dt, 14.0f);
     loader_.update(dt);
     for (ui::SpringColor &colour : ambient_)
         colour.update(dt, 4.0f);
@@ -2001,6 +2061,7 @@ void View::draw(Frame &frame) const
     // drawn solid and hide what is under them.
     ui::Canvas above{list, fonts_, 0, clock_};
     toasts_.draw(above);
+    draw_community(above);
     draw_pairing(above);
     port_prompt_.draw(above);
     host_prompt_.draw(above);
@@ -2148,6 +2209,7 @@ void View::draw_footer(ui::Canvas &canvas, ui::Painter &paint) const
     }
     else
     {
+        hints[count++] = {ui::Button::cross, i18n::tr("Join the community")};
         hints[count++] = {ui::Button::circle, i18n::tr("PCs")};
     }
     ui::draw_hints(list, canvas.fonts, glyphs(paint), hints, count, kRight, true);
@@ -2468,6 +2530,21 @@ void View::draw_about(ui::Canvas &canvas, ui::Painter &paint) const
     paint.body(i18n::tr("Credits and first steps"),
                kMargin + paint.heading_width(i18n::tr("About Datura"), 52.0f) + 22.0f, 212.0f,
                24.0f, paint.page_text_muted());
+    // The community (community.hpp), at the right of the heading: its QR code, and before it
+    // what it is, its name and its address. Cross shows the card, with a larger code.
+    {
+        const QrCode &code = community_code();
+        const float side = 3.0f * static_cast<float>(code.size + 8);
+        const float x = kRight - side;
+        draw_qr(list, code, x, 138.0f, 3.0f);
+        const float text = x - 28.0f;
+        paint.label(label_case(i18n::tr("Join the community")), text, 168.0f, 19.0f,
+                    paint.page_text_muted(), gfx::Align::right);
+        paint.heading(prosperolight::community::kName, text, 212.0f, 36.0f, paint.page_text(),
+                      gfx::Align::right);
+        paint.label(prosperolight::community::kLink, text, 244.0f, 22.0f, t.primary,
+                    gfx::Align::right);
+    }
 
     credits_panel_.draw(canvas, kCreditsPanel);
     const Rect left = credits_panel_.content_rect(kCreditsPanel).inset(14.0f);
@@ -2572,6 +2649,69 @@ void View::draw_pairing(ui::Canvas &canvas) const
     pair_timer_.draw(canvas);
     paint.body(i18n::tr("This closes by itself when Sunshine accepts the PIN."), panel.cx(),
                panel.y + panel.h - 36.0f, 21.0f, t.text_muted, gfx::Align::center);
+    list.pop_opacity();
+}
+
+void View::offer_community()
+{
+    community_due_ = !prosperolight::community::seen();
+    community_wait_ = 0.0f;
+}
+
+void View::close_community(ui::Feedback &feedback)
+{
+    // For good. Should the file not take it, the card stays closed while the app runs, and
+    // comes back at a later start.
+    community_open_ = false;
+    if (!prosperolight::community::seen() && !prosperolight::community::set_seen())
+        prosperolight_debug_line("community", "could not save that the card was closed");
+    feedback.play(audio::Cue::modal_close);
+}
+
+// The community, once, laid out as the What's new page is: what it is above, the QR code at the
+// left, the server's name and address at the right, and the one button it names below.
+void View::draw_community(ui::Canvas &canvas) const
+{
+    const float shown = community_fade_.value;
+    if (shown <= 0.01f)
+        return;
+    const ui::Theme &t = theme_;
+    gfx::DrawList &list = canvas.list;
+    list.rounded_rect({0, 0, gfx::kVirtualWidth, gfx::kVirtualHeight}, 0,
+                      Color::rgb(0x000000, 0.55f * shown));
+    list.push_opacity(shown);
+    const Rect panel = kCommunityPanel;
+    ui::draw_overlay_panel(canvas, t, panel, false, 0.6f);
+    ui::Painter paint(list, canvas.fonts, t, canvas.glass);
+    const float left = panel.x + 64.0f;
+    const float wide = panel.w - 128.0f;
+    paint.label(label_case(i18n::tr("Join the community")), left, panel.y + 62.0f, 20.0f,
+                t.text_muted);
+    paint.bounded_heading(i18n::tr("Our server on Discord"), left, panel.y + 116.0f, 40.0f, t.text,
+                          wide);
+    ui::paragraph(list, canvas.fonts.regular,
+                  i18n::tr("Get help, hear about new releases and meet other players on Discord."),
+                  left, panel.y + 162.0f, 24.0f, wide, 32.0f, t.text_muted, 2);
+    // The code: eight pixels a module.
+    const QrCode &code = community_code();
+    const float side = 8.0f * static_cast<float>(code.size + 8);
+    const float top = panel.y + 222.0f;
+    draw_qr(list, code, left, top, 8.0f);
+    const float x = left + side + 48.0f;
+    const float room = panel.x + panel.w - 64.0f - x;
+    paint.heading(prosperolight::community::kName, x, top + 70.0f, 64.0f, t.text);
+    paint.bounded_label(prosperolight::community::kLink, x, top + 120.0f, 30.0f, t.primary, room);
+    ui::paragraph(list, canvas.fonts.regular,
+                  i18n::tr("Scan the code with your phone, or open the address."), x, top + 178.0f,
+                  24.0f, room, 32.0f, t.text, 3);
+    ui::paragraph(list, canvas.fonts.regular, i18n::tr("You can find it again in About."), x,
+                  top + 274.0f, 22.0f, room, 30.0f, t.text_muted, 2);
+    // Any button closes it; Cross is the one it names.
+    const ui::GlyphStyle glyph = t.dark ? ui::GlyphStyle::dark() : ui::GlyphStyle::light();
+    const float cy = panel.y + panel.h - 64.0f;
+    ui::draw_button(list, canvas.fonts, glyph, ui::Button::cross, left, cy, 32.0f);
+    paint.body(i18n::tr("Close"), left + ui::button_width(ui::Button::cross, 32.0f) + 12.0f,
+               cy + 8.0f, 24.0f, t.text);
     list.pop_opacity();
 }
 

@@ -1,16 +1,16 @@
 {
   "fonts": {
-    "NotoSans": "3cde6d395c33abdb1bedb68822f4cabd2422eb84fbcff181b9663cdbf238b73d",
-    "NotoSansArabic": "67431db81cd400fcc1f973d8165c3d926ca6c49304bcf5e6d8caa5633f541b6e",
-    "NotoSansHebrew": "7ee94cf065b80913590e21b29c082b6548c74b411a09fb3904ad54a79fe40fae",
-    "NotoSansDevanagari": "ee6755bd79bcde002aa93d321f7b33f990c8471b421d46de9973356f397be958",
-    "NotoSansTamil": "387395945a48c1b79d1179d2757accac1743e2583af003af6d8a8f23bd41f206",
-    "NotoSansThai": "36e06977b748e47374deeefa855f8dfd79553275feeda4121840c10d4d42a42c",
-    "NotoSansSC": "f5e4de1b122d32fa094ddc8ed71b840cb95e0087138c992aac76277350fd43c7",
-    "NotoSansTC": "0d70bab553680e983afda7d3422b9f0b0ad828db2118dc3faea1788093756778",
-    "NotoSansJP": "e33b46c78d73e4b1c4fa69e3b10352b2e96d8d08f3dc86cff39f50297e9eaf7f",
-    "NotoSansKR": "3c91d184c319766b31b176ded1f8e5f1aab52ad0c0ff4d8fddb561ce2fefa17b"
+    "NotoSans": "3ed2969da1318806afad8d0a708ae52a02e4869e79ebf7159f5aebe76b6d1b5f",
+    "NotoSansArabic": "cfef27dcc44cfb6c5f6d000ca8a8f4a11e7e894483a8a2dbc9d763f014f7521e",
+    "NotoSansHebrew": "adf89099474c541b6205d8c878196cd8d7c903ad9a503284a5a927936109ffec",
+    "NotoSansDevanagari": "0b0c1f8f65e815f3fac543d30646ee81ae084793ef1816de5215e45e3aefb8cd",
+    "NotoSansTamil": "d628df2801d449bd26d8953a61160be6abc44439f20742a828a83e1f0f41e0d5",
+    "NotoSansThai": "aa820812e50e4cd4c4759322e2e4a828ed40962e5e27b10fb6cf625ca882bcf9",
+    "NotoSansSC": "faef37affd016be4ac994c8264862ee8a712f02e815ddda44ef438973c0f2262",
+    "NotoSansTC": "510579887fb06b49e949e2a141a34e72dbbd3aa6c1977720c86f2281dd81cc23",
+    "NotoSansJP": "d0e6e4a96c726d9be255138b80b56b2ce1ec7b75ecc04f0b3f35cc94e2248bbf",
+    "NotoSansKR": "e73d66fe6a99c5262fb7cc4c0256f2e51ec60a2dabc638598c598fffcabd80b2"
   },
-  "shaped_glyphs": 894,
-  "codepoints": 2071
+  "shaped_glyphs": 919,
+  "codepoints": 2179
 }

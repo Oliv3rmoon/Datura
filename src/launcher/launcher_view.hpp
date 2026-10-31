@@ -147,6 +147,15 @@ class View
     {
         return update_ui_ == UpdateUi::offer;
     }
+    // The card that names the community (community.hpp): asked for at the app's first start, it
+    // comes once the launcher is quiet (no update offer, prompt or pairing open), unless the
+    // player has closed it before. Any button closes it, which is saved, and it is not offered
+    // again. About names the community always; Cross there shows the card again.
+    void offer_community();
+    bool community_open() const
+    {
+        return community_open_;
+    }
     int screen() const
     {
         return screen_;
@@ -211,6 +220,8 @@ class View
     void draw_settings(hui::ui::Canvas &canvas, hui::ui::Painter &paint) const;
     void draw_about(hui::ui::Canvas &canvas, hui::ui::Painter &paint) const;
     void draw_pairing(hui::ui::Canvas &canvas) const;
+    void draw_community(hui::ui::Canvas &canvas) const;
+    void close_community(hui::ui::Feedback &feedback);
     void draw_update(hui::ui::Canvas &canvas) const;
     void update_modal(const hui::InputFrame &input, float dt, hui::ui::Feedback &feedback);
     void open_update_failure(const char *reason, hui::ui::Feedback &feedback);
@@ -286,6 +297,11 @@ class View
     hui::ui::InputPrompt port_prompt_;
     hui::ui::InputPrompt host_prompt_;
     hui::ui::Dialog unpair_dialog_;
+    // The community's card: asked for, waiting for a quiet moment, then on screen.
+    bool community_due_ = false;
+    bool community_open_ = false;
+    float community_wait_ = 0.0f;
+    hui::tween::Spring community_fade_;
     // The update: the question, then the ring while the helper works.
     enum class UpdateUi : std::uint8_t
     {

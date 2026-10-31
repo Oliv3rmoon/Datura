@@ -159,6 +159,14 @@ adapted from that SDK's native application recipe.
 ps5-homebrew-ui, Copyright (C) 2026 BlackBearReloaded, GPL-3.0-or-later. Its
 shader distance functions follow Inigo Quilez's published formulas (MIT).
 
+The QR code of the community's invitation, on the About page and on the card
+shown once at the first start, is made by Nayuki's
+[QR Code generator](https://github.com/nayuki/QR-Code-generator/tree/v1.8.0/c)
+(C), version 1.8.0, commit `720f62bddb7226106071d4728c292cb1df519ceb`,
+Copyright (c) Project Nayuki, MIT License. The unmodified source is in
+`third_party/qrcodegen/` with `SOURCE.json`; its licence, `LICENSE` there,
+ships with the app as `licenses/qrcodegen-MIT.txt`.
+
 The launcher's fonts in `assets/fonts/` are distance-field renderings, made
 by `tools/bake-fonts.sh`, of the typefaces in `third_party/fonts/`: Inter and
 Montserrat (SIL Open Font License 1.1) and DejaVu Sans Mono (Bitstream Vera

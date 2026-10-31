@@ -316,5 +316,10 @@
   "ends the stream and returns here": "завершает трансляцию и возвращает в меню",
   "left": "осталось",
   "the PC": "ПК",
-  "this PC": "этот ПК"
+  "this PC": "этот ПК",
+  "Join the community": "Присоединяйтесь к сообществу",
+  "Get help, hear about new releases and meet other players on Discord.": "Получайте помощь, узнавайте о новых версиях и общайтесь с другими игроками в Discord.",
+  "Our server on Discord": "Наш сервер в Discord",
+  "Scan the code with your phone, or open the address.": "Отсканируйте код телефоном или откройте адрес.",
+  "You can find it again in About.": "Его можно снова найти на вкладке «О программе»."
 }

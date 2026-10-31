@@ -666,6 +666,10 @@ Result Run(Selection *selection, const char *stream_error, bool first_start)
                 prosperolight::pending_forwarded_launch() = {};
                 if (forwarded.active())
                     view.begin_forwarded(forwarded.launch().app, forwarded.launch().pc);
+                // The community, once (community.hpp): not when the app only passes through
+                // to a game, nor in a Test Lab run.
+                else if (!model.session_only())
+                    view.offer_community();
             }
             view.set_players(SignedInUsers());
             view.set_update_actions(

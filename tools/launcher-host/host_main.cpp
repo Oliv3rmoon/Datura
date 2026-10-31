@@ -20,10 +20,12 @@
 #include "connecting_plate.hpp"
 #include "i18n.hpp"
 #include "client_preferences.hpp"
+#include "community.hpp"
 #include "host_preferences.hpp"
 #include "launcher/forwarded_start.hpp"
 #include "launcher/launcher_model.hpp"
 #include "launcher/launcher_view.hpp"
+#include "qr_reader.hpp"
 
 #include "audio/cues.hpp"
 #include "core/save_file.hpp"
@@ -43,6 +45,8 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+#include <functional>
+#include <optional>
 #include <string>
 #include <set>
 #include <unistd.h>
@@ -283,6 +287,31 @@ int main(int argc, char **argv)
     static PretendUpdate pretend;
     static int update_exits = 0;
 
+    // The community's card (community.hpp): when set, the launcher is asked for it, as the
+    // console asks at the app's first start.
+    bool offer_community = false;
+    // Looks at a state as it is captured: its name, the view and the frame just drawn.
+    std::function<void(const std::string &, const launcher::View &, const launcher::Frame &)>
+        inspect;
+    // The texts a view draws now, as the layout check sees them.
+    static std::vector<std::string> drawn_texts;
+    const auto texts_of = [](const launcher::View &view)
+    {
+        drawn_texts.clear();
+        auto *const previous = hui::gfx::DrawList::text_audit;
+        hui::gfx::DrawList::text_audit =
+            [](std::string_view value, const hui::gfx::Rect &, const hui::gfx::Rect &, bool)
+        { drawn_texts.emplace_back(value); };
+        launcher::Frame probe;
+        view.draw(probe);
+        hui::gfx::DrawList::text_audit = previous;
+        return drawn_texts;
+    };
+    const auto draws = [](const std::vector<std::string> &texts, const char *text)
+    { return std::find(texts.begin(), texts.end(), text) != texts.end(); };
+    // What the community's QR code must open, written out here rather than taken from the app.
+    const std::optional<std::string> invitation = "https://discord.gg/pSqgRU3YP9";
+
     // The picture a session that starts a stream hands to the stream.
     std::vector<unsigned char> plate;
     launcher::View::ConnectBar plate_bar;
@@ -334,6 +363,8 @@ int main(int argc, char **argv)
         view.set_storage({true, "/data/prosperolight/config", "/data/prosperolight/pairing",
                           "/data/prosperolight/logs"});
         view.show_stream_error(stream_error);
+        if (offer_community)
+            view.offer_community();
         launcher::ForwardedStart forwarded;
         forwarded.Begin(std::move(prosperolight::pending_forwarded_launch()), now_ms);
         prosperolight::pending_forwarded_launch() = {};
@@ -457,6 +488,8 @@ int main(int argc, char **argv)
             frame.reset();
             frame.glass_texture = renderer.glass_texture();
             view.draw(frame);
+            if (inspect)
+                inspect(name, view, frame);
             if (std::getenv("PROSPEROLIGHT_LAYOUT_CHECK") && name.find("row-") != std::string::npos)
                 return;
             renderer.begin();
@@ -633,6 +666,10 @@ int main(int argc, char **argv)
                     i18n::tr("Could not connect to Sunshine"));
             session(("layout-about-" + locale).c_str(),
                     {{30, previous}, {60, 0, Direction::none, "page"}}, "");
+            offer_community = true;
+            session(("layout-community-" + locale).c_str(), {{150, 0, Direction::none, "card"}},
+                    "");
+            offer_community = false;
         }
         hui::gfx::DrawList::text_audit = nullptr;
         for (const auto &violation : violations)
@@ -1068,8 +1105,70 @@ int main(int argc, char **argv)
     pretend = PretendUpdate{};
     offer_update = false;
 
+    // ---- the community: a card at a first start, once; any button closes it for good ----
+    offer_community = true;
+    bool card_shown = false;
+    inspect = [&](const std::string &name, const launcher::View &view, const launcher::Frame &drawn)
+    {
+        if (name == "waits")
+            expect(!view.community_open(), "the community card waits for a quiet moment");
+        if (name == "closed" || name == "not-again")
+            expect(!view.community_open(), "the community card stays closed once a button closed it");
+        if (name != "card")
+            return;
+        card_shown = view.community_open();
+        expect(qr_reader::read(qr_reader::drawn(drawn.overlay)) == invitation,
+               "the community card draws a QR code that opens https://discord.gg/pSqgRU3YP9");
+        const std::vector<std::string> texts = texts_of(view);
+        expect(draws(texts, "nightly") && draws(texts, "discord.gg/pSqgRU3YP9"),
+               "the community card names nightly and its address");
+    };
+    session("community",
+            {{20, 0, Direction::none, "waits"},
+             {100, 0, Direction::none, "card"},
+             {10, square},
+             {40, 0, Direction::none, "closed"}},
+            "");
+    expect(card_shown, "the community card shows at a first start");
+    prosperolight::community::seen_preference = -1; // read back from its file
+    expect(prosperolight::community::seen(), "closing the community card is saved");
+    session("community", {{200, 0, Direction::none, "not-again"}}, "");
+    offer_community = false;
+
     // ---- About: one step back from the first tab ----
-    session("about", {{30, previous}, {60, 0, Direction::none, "page"}, {10, back}, {30, 0}}, "");
+    // It names the community with its QR code; Cross shows the card, and any button closes it.
+    bool about_checked = false;
+    inspect = [&](const std::string &name, const launcher::View &view, const launcher::Frame &drawn)
+    {
+        if (name == "page")
+        {
+            about_checked = true;
+            expect(qr_reader::read(qr_reader::drawn(drawn.overlay)) == invitation,
+                   "About draws a QR code that opens https://discord.gg/pSqgRU3YP9");
+            const std::vector<std::string> texts = texts_of(view);
+            expect(draws(texts, "nightly") && draws(texts, "discord.gg/pSqgRU3YP9"),
+                   "About names nightly and its address");
+        }
+        else if (name == "card")
+            expect(view.community_open() &&
+                       qr_reader::read(qr_reader::drawn(drawn.overlay)) == invitation,
+                   "Cross on About shows the community card");
+        else if (name == "card-closed")
+            expect(!view.community_open() && view.screen() == 3,
+                   "any button closes the card and stays on About");
+    };
+    session("about",
+            {{30, previous},
+             {60, 0, Direction::none, "page"},
+             {10, confirm},
+             {40, 0, Direction::none, "card"},
+             {10, back},
+             {30, 0, Direction::none, "card-closed"},
+             {10, back},
+             {30, 0}},
+            "");
+    inspect = nullptr;
+    expect(about_checked, "About was looked at");
     // A pull request's build names itself beside the version.
     session("about-pull-request", {{30, previous}, {60, 0, Direction::none, "page"}}, "");
 

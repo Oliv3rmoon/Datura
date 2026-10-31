@@ -421,6 +421,7 @@ cp "$root/third_party/licenses/libpng.txt" "$app/licenses/libpng.txt"
 cp "$root/third_party/licenses/libjpeg-turbo.txt" "$app/licenses/libjpeg-turbo.txt"
 cp "$root/third_party/licenses/libwebp.txt" "$app/licenses/libwebp.txt"
 cp "$root/third_party/licenses/miniz.txt" "$app/licenses/miniz.txt"
+cp "$root/third_party/qrcodegen/LICENSE" "$app/licenses/qrcodegen-MIT.txt"
 cp "$root/third_party/moonlight-common-c/LICENSE.txt" "$app/licenses/moonlight-common-c-LICENSE.txt"
 if [[ ${PYROWAVE:-0} == 1 ]]; then
     cp "$root/src/pyrowave/LICENSE-MIT.txt" "$app/licenses/PS5-PyroWave-PoC-MIT.txt"

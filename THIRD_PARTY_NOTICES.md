@@ -21,11 +21,17 @@ The original ProsperoLight artwork and selection music are distributed under
 the project license.
 
 In Datura, Oliv3rmoon's release of ProsperoLight, the icon and the
-home-screen pictures (`sce_sys/icon0.png`, `pic0.dds` and `pic1.dds` with their
-PNGs and source PNGs) take the place of ProsperoLight's artwork; the selection
-music is ProsperoLight's. They are drawn by `tools/render-home-art.py`, after
-Physalis's and Nightshade's (Oliv3rmoon/Nightshade), Copyright (C) 2026
-Oliv3rmoon, and distributed under GPL-3.0-or-later.
+home-screen pictures take the place of ProsperoLight's artwork; the selection
+music is ProsperoLight's.
+
+Datura's icon is its own logo, made for this project
+(`assets/branding/datura-logo-1024.png`, and `sce_sys/icon0.png` resized from
+it), Copyright (C) 2026 Oliv3rmoon, distributed under GPL-3.0-or-later.
+
+The home-screen pictures (`pic0.dds` and `pic1.dds` with their PNGs and source
+PNGs) are drawn by `tools/render-home-art.py`, after Physalis's and Nightshade's
+(Oliv3rmoon/Nightshade), Copyright (C) 2026 Oliv3rmoon, and distributed under
+GPL-3.0-or-later.
 
 ## Native build dependencies
 

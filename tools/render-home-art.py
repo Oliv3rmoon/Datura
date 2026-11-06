@@ -14,9 +14,8 @@ and Nightshade's palette (its "nightly" theme). The mark is the flower with the 
 it, three arcs of red light, as the launcher draws it in its header (src/launcher/launcher_view.cpp,
 draw_mark).
 
-Writes, in sce_sys/:
-  icon0.png                     512x512: a black controller lit red, the flower on its touchpad,
-                                the stream rising from it, four berries for its face buttons
+Writes, in sce_sys/ (icon0.png is no longer drawn here: it is Datura's logo, resized from
+assets/branding/datura-logo-1024.png; --preview still draws the old one):
   background-source.png         3840x2160: Nightshade's moon at the right, a crescent of red light,
                                 the nightshade flowering in front of it with the stream going out
   launch-background-source.png  3840x2160: Nightshade's eclipse round the flower, the stream going
@@ -529,7 +528,7 @@ def main():
         to_image(background(960, 540)).save(out / 'background.png')
         to_image(launch(960, 540)).save(out / 'launch.png')
         return
-    pictures = {'icon0.png': to_image(icon())}
+    pictures = {}  # icon0.png is the logo (assets/branding/datura-logo-1024.png), not drawn here
     for source, target, draw in (('background-source.png', 'pic0.dds', background),
                                  ('launch-background-source.png', 'pic1.dds', launch)):
         picture = to_image(draw(), 'RGBA')

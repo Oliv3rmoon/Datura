@@ -39,6 +39,12 @@ Datura is a native game-streaming client for the PS5, and a Nightshade app by **
 - **Nightshade's look.** Black glass panels, a red accent, a near-black sky with a low red glow, and the nightshade flower with the stream going out of it on the icon and the home-screen pictures.
 - **Updates from its own releases.** At the start it asks this repository for a newer release and installs it with **Update now**. Your PCs, pairing and settings carry over: it keeps the title ID (`PPSA99002`) and the data folder (`/data/prosperolight`).
 
+## nightly insider
+
+**nightly insider** is early access to the Nightshade family's new builds for members of nightly on Discord. For now it covers Nightshade and Dulcamara: Nightshade builds after v1.010.012 and Dulcamara builds after 0.2.12 go to insiders first and are published on GitHub for everyone about two months later. Datura's releases come out here as before.
+
+To become one, join [nightly on Discord](https://discord.gg/pSqgRU3YP9), verify, run `/rank Tester` in #bot-commands, then sign in with Discord at [nightly-insider.nightly-ps5.workers.dev](https://nightly-insider.nightly-ps5.workers.dev) to get your code.
+
 ## Install
 
 You need a PS5 with a compatible homebrew environment and title loader already set up. Datura does not install or provide an exploit.
